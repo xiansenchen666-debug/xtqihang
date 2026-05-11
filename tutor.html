@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星途启航家教兼职平台</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <style>
+        html { overflow-y: auto; }
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; overflow-y: auto; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .btn-hover { transition: all 0.3s ease; }
+        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4); }
+        .card-hover { transition: all 0.4s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        
+        /* 弹窗通用样式 */
+        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; pointer-events: none; }
+        .modal.active { opacity: 1; visibility: visible; pointer-events: auto; }
+        .modal .modal-content { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform: translateY(20px) scale(0.95); }
+        .modal.active .modal-content { transform: translateY(0) scale(1); }
+        
+        .tab-active { border-bottom: 2px solid #C5A059; color: #C5A059; font-weight: 600; }
+        .tab-inactive { border-bottom: 2px solid transparent; color: #1A2B3C; opacity: 0.6; }
+        .tab-inactive:hover { opacity: 1; }
+        
+        /* 自定义滚动条 */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(26, 43, 60, 0.1); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(26, 43, 60, 0.2); }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
+        <div class="max-w-7xl mx-auto relative flex items-center justify-between min-h-[3rem]">
+            <a href="/" class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-base font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回首页
+            </a>
+            <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-lg font-medium text-brand-primary/70">
+                <a href="/k12" class="hover:text-brand-accent transition-colors decoration-transparent">K12教育</a>
+                <a href="/adult-education" class="hover:text-brand-accent transition-colors decoration-transparent">成人教育</a>
+                <a href="/tutor" class="text-brand-accent transition-colors decoration-transparent">家教兼职</a>
+                <a href="/study-room" class="hover:text-brand-accent transition-colors decoration-transparent">自习室</a>
+                <a href="/ai-eval" class="hover:text-brand-accent transition-colors decoration-transparent">AI评估</a>
+            </div>
+            <a href="/" class="ml-auto relative inline-block font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                <span class="absolute -top-2.5 -left-1 text-[10px] text-brand-accent leading-none">星途</span>
+                <span class="text-2xl">启航教育</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 主体内容区 -->
+    <main class="pt-32 pb-24 px-6 md:px-12 min-h-[calc(100vh+12rem)]">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- 头部说明与发单按钮 -->
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div class="max-w-2xl">
+                    <h1 class="text-4xl font-serif font-bold text-brand-primary mb-4">
+                        家教<span class="italic text-brand-accent">大厅</span>
+                    </h1>
+                    <p class="text-brand-primary/70 text-lg">
+                        优质生源与专业教员的对接平台。每个账号均可免费发布或申请接单。
+                    </p>
+                </div>
+                <button onclick="checkAuthAndPost()" class="mt-6 md:mt-0 inline-flex items-center justify-center px-6 py-3 bg-brand-accent text-white font-medium rounded-full btn-hover shadow-lg border-none outline-none cursor-pointer">
+                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i> 免费发布家教
+                </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex border-b border-brand-primary/10 mb-10 overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('open')" id="tab-open" class="px-6 py-3 tab-active transition-all whitespace-nowrap outline-none">兼职大厅</button>
+                <button onclick="switchTab('published')" id="tab-published" class="px-6 py-3 tab-inactive transition-all whitespace-nowrap outline-none">我发布的</button>
+                <button onclick="switchTab('accepted')" id="tab-accepted" class="px-6 py-3 tab-inactive transition-all whitespace-nowrap outline-none">我的接单</button>
+            </div>
+
+            <!-- 列表容器 -->
+            <div id="jobs-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- JS 动态渲染卡片 -->
+            </div>
+            
+            <!-- 加载中提示 -->
+            <div id="loading-spinner" class="py-20 text-center text-brand-primary/50 hidden">
+                <i data-lucide="loader-2" class="w-8 h-8 mx-auto animate-spin mb-4"></i>
+                <p>加载中...</p>
+            </div>
+            
+            <!-- 空状态提示 -->
+            <div id="empty-state" class="py-20 text-center text-brand-primary/50 hidden">
+                <div class="w-16 h-16 bg-brand-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="inbox" class="w-8 h-8"></i>
+                </div>
+                <p id="empty-message">暂无数据</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 发布/编辑家教弹窗 -->
+    <div id="post-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closePostModal()"></div>
+        <div class="modal-content relative w-full max-w-2xl bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col">
+            <!-- 弹窗头部 -->
+            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50 sticky top-0 z-20">
+                <div>
+                    <h3 id="post-modal-title" class="text-2xl font-serif font-bold text-brand-primary">发布家教需求</h3>
+                    <p class="text-sm text-brand-primary/60 mt-1">请详细填写您的需求，以便匹配到合适的老师</p>
+                </div>
+                <button onclick="closePostModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- 弹窗表单内容 -->
+            <div class="p-8 overflow-y-auto custom-scrollbar relative">
+                <!-- 装饰背景 -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+                <!-- 智能粘贴识别区域 -->
+                <div class="mb-6 bg-brand-primary/5 rounded-xl p-4 border border-brand-primary/10">
+                    <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center justify-between">
+                        <span>智能识别信息 <span class="text-brand-accent font-normal normal-case">(粘贴文本自动填入下方表单)</span></span>
+                        <button type="button" onclick="smartParse()" class="bg-brand-accent text-white hover:bg-brand-accent/90 transition-colors text-sm font-bold cursor-pointer border-none outline-none flex items-center gap-1 px-4 py-2 rounded-lg shadow-md shadow-brand-accent/20 btn-hover">
+                            <i data-lucide="wand-2" class="w-4 h-4"></i> 立即识别
+                        </button>
+                    </label>
+                    <textarea id="smart-paste-area" rows="3" placeholder="例如：某某家教1004030号家教&#10;地址：科技园地铁站附近&#10;科目：英语&#10;年级：初一男..." class="w-full px-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm resize-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all custom-scrollbar"></textarea>
+                </div>
+
+                <form id="post-form" onsubmit="submitPost(event)" class="space-y-6">
+                    <input type="hidden" id="p-jobId">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">地址 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-address" required placeholder="如: 宝安区棕榈堡花园" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">学生年级 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-grade" required placeholder="如: 初二女孩" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">科目 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="book-open" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-subject" required placeholder="如: 物理" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">费用 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="dollar-sign" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-fee" required placeholder="如: 220-240/h" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">时间安排 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="p-time" required placeholder="如: 一周一次 周六上午" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">学生情况</label>
+                        <div class="relative">
+                            <i data-lucide="bar-chart" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="p-studentInfo" placeholder="如: 基础中等语法弱一点" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">老师要求 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="check-square" class="absolute left-4 top-4 w-4 h-4 text-brand-primary/40"></i>
+                            <textarea id="p-req" required rows="3" placeholder="如: 女老师，沟通能力强，善于互动..." class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm resize-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">备注 <span class="text-brand-primary/40 font-normal">(选填)</span></label>
+                        <div class="relative">
+                            <i data-lucide="info" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="p-remark" placeholder="其他补充信息" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-brand-primary/10">
+                        <button type="submit" id="post-submit-btn" class="w-full py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-primary/20">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            <span id="post-submit-text">确认发布需求</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 接单弹窗 -->
+    <div id="apply-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeApplyModal()"></div>
+        <div class="modal-content relative w-full max-w-md bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10">
+            <!-- 弹窗头部 -->
+            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50">
+                <div>
+                    <h3 class="text-2xl font-serif font-bold text-brand-primary">确认接单</h3>
+                    <p class="text-sm text-brand-primary/60 mt-1">留下您的联系方式，教务将与您对接</p>
+                </div>
+                <button onclick="closeApplyModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- 弹窗表单内容 -->
+            <div class="p-8 relative">
+                <!-- 装饰背景 -->
+                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+                
+                <form id="apply-form" onsubmit="submitApply(event)" class="space-y-6">
+                    <input type="hidden" id="a-jobId">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">老师姓名 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="a-name" required placeholder="您的真实姓名" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">联系电话 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="tel" id="a-phone" required placeholder="您的手机号码" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-brand-primary/10">
+                        <button type="submit" id="apply-submit-btn" class="w-full py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-accent/20">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            确认申请接单
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 错误/提示 弹窗 -->
+    <div id="alert-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAlertModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+            <div class="p-8 text-center">
+                <div id="alert-icon-container" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i id="alert-icon" data-lucide="info" class="w-8 h-8"></i>
+                </div>
+                <h3 id="alert-title" class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="alert-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
+                <button onclick="closeAlertModal()" id="alert-btn" class="w-full py-3 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认操作 弹窗 -->
+    <div id="confirm-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeConfirmModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                </div>
+                <h3 id="confirm-title" class="text-xl font-bold text-brand-primary mb-2">确认操作</h3>
+                <p id="confirm-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
+                <div class="flex gap-4">
+                    <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-gray-100 text-gray-600 font-medium rounded-xl hover:bg-gray-200 transition-colors border-none cursor-pointer">
+                        取消
+                    </button>
+                    <button id="confirm-btn" class="flex-1 py-3 bg-red-500 text-white font-medium rounded-xl btn-hover hover:bg-red-600 shadow-lg border-none cursor-pointer">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 专门用于显示发送成功的悬浮窗 Toast -->
+    <div id="send-success-toast" class="fixed top-[-100px] left-1/2 -translate-x-1/2 z-[9999] bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl shadow-2xl border border-green-500/20 flex items-center gap-3 transition-all duration-500 opacity-0 pointer-events-none">
+        <div class="w-8 h-8 rounded-full bg-green-100 text-green-500 flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-5 h-5"></i>
+        </div>
+        <div class="text-sm font-medium text-brand-primary">验证码已发送到您的邮箱，请注意查收。</div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 状态管理
+        let currentTab = 'open';
+        let jobsData = [];
+        
+        // 自定义弹窗 API
+        function customAlert(title, message, type = 'info') {
+            const modal = document.getElementById('alert-modal');
+            const iconContainer = document.getElementById('alert-icon-container');
+            const icon = document.getElementById('alert-icon');
+            const btn = document.getElementById('alert-btn');
+            
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerHTML = message.replace(/\n/g, '<br>');
+            
+            if (type === 'error') {
+                iconContainer.className = 'w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'x-circle');
+                btn.className = 'w-full py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else if (type === 'success') {
+                iconContainer.className = 'w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'check-circle');
+                btn.className = 'w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else {
+                iconContainer.className = 'w-16 h-16 bg-brand-primary/5 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'info');
+                btn.className = 'w-full py-3 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            }
+            
+            lucide.createIcons();
+            modal.classList.add('active');
+        }
+        
+        function closeAlertModal() {
+            document.getElementById('alert-modal').classList.remove('active');
+        }
+
+        function customConfirm(title, message, confirmCallback) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            
+            const confirmBtn = document.getElementById('confirm-btn');
+            // 移除旧的事件监听器
+            const newBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+            
+            newBtn.addEventListener('click', () => {
+                closeConfirmModal();
+                confirmCallback();
+            });
+            
+            document.getElementById('confirm-modal').classList.add('active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.remove('active');
+        }
+
+        // 鉴权拦截器
+        function getToken() {
+            return localStorage.getItem('tutor_token');
+        }
+        function getEmail() {
+            return localStorage.getItem('tutor_email');
+        }
+        
+        // 初始化UI
+        function initUI() {
+            // 旧菜单栏账号按钮已删除，这里保留空实现避免残留调用影响页面行为。
+        }
+
+        function goToLogin() {
+            openAuthModal();
+        }
+
+        function logout() {
+            customConfirm('退出登录', '您确定要退出当前账号吗？', () => {
+                localStorage.removeItem('tutor_token');
+                localStorage.removeItem('tutor_email');
+                initUI();
+                if (currentTab !== 'open') switchTab('open');
+                else fetchJobs();
+            });
+        }
+
+        // Fetch 带 Token
+        async function apiFetch(url, options = {}) {
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json', ...options.headers };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            
+            const response = await fetch(url, { ...options, headers });
+            if (response.status === 401) {
+                logout();
+                goToLogin();
+                throw new Error('Unauthorized');
+            }
+            return response;
+        }
+
+        // 登录弹窗逻辑在页面底部统一挂载（openAuthModal / submitAuth / sendAuthCode）
+
+
+        // Tab 切换
+        function switchTab(tab) {
+            if ((tab === 'published' || tab === 'accepted') && !getToken()) {
+                return goToLogin();
+            }
+            
+            ['open', 'published', 'accepted'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    el.classList.replace('tab-inactive', 'tab-active');
+                } else {
+                    el.classList.replace('tab-active', 'tab-inactive');
+                }
+            });
+            currentTab = tab;
+            fetchJobs();
+        }
+
+        // 获取并渲染列表
+        let isAdminUser = false;
+
+        async function fetchJobs() {
+            document.getElementById('jobs-container').innerHTML = '';
+            document.getElementById('loading-spinner').style.display = 'block';
+            document.getElementById('empty-state').style.display = 'none';
+            
+            try {
+                const res = await apiFetch(`/api/tutor/jobs?type=${currentTab}`);
+                const data = await res.json();
+                isAdminUser = Boolean(data.isAdmin);
+                document.getElementById('loading-spinner').style.display = 'none';
+                
+                if (data.data.length === 0) {
+                    document.getElementById('empty-message').innerText = currentTab === 'open' ? '大厅暂无开放接单的家教' : '暂无数据';
+                    document.getElementById('empty-state').style.display = 'block';
+                } else {
+                    jobsData = data.data; // Store globally for editing
+                    renderJobs(data.data);
+                }
+            } catch (e) {
+                document.getElementById('loading-spinner').style.display = 'none';
+            }
+        }
+
+        function renderJobs(jobs) {
+            const container = document.getElementById('jobs-container');
+            const currentUser = getEmail();
+            const isAdmin = isAdminUser;
+            
+            jobs.forEach(job => {
+                let badge = '';
+                let actionBtn = '';
+
+                if (currentTab === 'open') {
+                    badge = `<span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">可接单</span>`;
+                    
+                    let editBtnHtml = '';
+                    if (job.canEdit || isAdmin) {
+                        editBtnHtml = `<button onclick="openEditModal('${job.id}')" class="w-full mt-2 py-3 bg-blue-50 text-blue-600 font-medium rounded-xl btn-hover hover:bg-blue-100 transition-colors cursor-pointer border-none outline-none">编辑信息 ${isAdmin ? '(管理员)' : ''}</button>`;
+                    }
+                    
+                    let deleteBtnHtml = '';
+                    if (isAdmin) {
+                        deleteBtnHtml = `<button onclick="deleteJob('${job.id}')" class="w-full mt-2 py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">删除此岗位 (管理员)</button>`;
+                    }
+
+                    if (job.publisherEmail === currentUser && !isAdmin) {
+                        actionBtn = `<button disabled class="w-full py-3 bg-gray-100 text-gray-400 font-medium rounded-xl border-none cursor-not-allowed">这是你发布的岗位</button>${editBtnHtml}`;
+                    } else {
+                        actionBtn = `<button onclick="openApplyModal('${job.id}')" class="w-full py-3 bg-transparent border border-brand-accent text-brand-accent font-medium rounded-xl btn-hover hover:bg-brand-accent hover:text-white transition-colors cursor-pointer outline-none">我要接单</button>${editBtnHtml}${deleteBtnHtml}`;
+                    }
+                } 
+                else if (currentTab === 'published') {
+                    let editBtnHtml = '';
+                    if (job.canEdit || isAdmin) {
+                        editBtnHtml = `<button onclick="openEditModal('${job.id}')" class="w-full mb-2 py-3 bg-blue-50 text-blue-600 font-medium rounded-xl btn-hover hover:bg-blue-100 transition-colors cursor-pointer border-none outline-none">编辑信息</button>`;
+                    }
+
+                    if (job.status === 'open') {
+                        badge = `<span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">等待接单</span>`;
+                        actionBtn = `${editBtnHtml}<button onclick="deleteJob('${job.id}')" class="w-full py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">删除此岗位</button>`;
+                    } else {
+                        badge = `<span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">已被接单</span>`;
+                        actionBtn = `<div class="p-3 bg-gray-50 rounded-xl text-sm text-center text-gray-600 mb-2">接单人: ${job.acceptedByName} (${job.acceptedByPhone})</div>
+                                     ${editBtnHtml}
+                                     <button onclick="deleteJob('${job.id}')" class="w-full py-2 bg-transparent text-red-500 text-sm font-medium rounded-lg hover:underline cursor-pointer border-none outline-none">强制删除</button>`;
+                    }
+                }
+                else if (currentTab === 'accepted') {
+                    badge = `<span class="px-3 py-1 bg-brand-accent/20 text-brand-accent text-xs font-bold rounded-full">已接单</span>`;
+                    actionBtn = `<button onclick="cancelApply('${job.id}')" class="w-full py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">取消接单 (退回大厅)</button>`;
+                }
+
+                const card = `
+                    <div class="glass rounded-2xl p-8 card-hover flex flex-col h-full relative overflow-hidden">
+                        <!-- 装饰性背景光晕 -->
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+                        
+                        <div class="flex-grow relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <h3 class="text-xl font-bold text-brand-primary">${job.subject} - ${job.grade}</h3>
+                                ${badge}
+                            </div>
+                            <div class="space-y-4 text-sm text-brand-primary/80 mb-8">
+                                <div class="flex items-start">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
+                                    <span class="w-16 font-bold shrink-0">【地址】</span>
+                                    <span class="flex-grow leading-relaxed">${job.address}</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <i data-lucide="bar-chart" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
+                                    <span class="w-16 font-bold shrink-0">【情况】</span>
+                                    <span class="flex-grow leading-relaxed">${job.studentInfo || '无'}</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <i data-lucide="clock" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
+                                    <span class="w-16 font-bold shrink-0">【时间】</span>
+                                    <span class="flex-grow leading-relaxed">${job.time}</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <i data-lucide="dollar-sign" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
+                                    <span class="w-16 font-bold shrink-0">【费用】</span>
+                                    <span class="flex-grow leading-relaxed font-semibold text-brand-accent">${job.fee}</span>
+                                </div>
+                                <div class="flex items-start bg-white/50 border border-brand-primary/5 p-4 rounded-xl mt-4">
+                                    <span class="w-16 font-bold text-brand-primary/90 shrink-0">【要求】</span>
+                                    <span class="flex-grow leading-relaxed text-brand-primary/90">${job.requirement}</span>
+                                </div>
+                                ${job.remark ? `
+                                <div class="flex items-start text-brand-primary/50 text-xs mt-2">
+                                    <span class="w-16 shrink-0">【备注】</span>
+                                    <span class="flex-grow leading-relaxed">${job.remark}</span>
+                                </div>` : ''}
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-brand-primary/10 relative z-10">
+                            ${actionBtn}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', card);
+            });
+            lucide.createIcons();
+        }
+
+        // 发布/编辑逻辑
+        function checkAuthAndPost() {
+            if (!getToken()) return goToLogin();
+            document.getElementById('post-form').reset();
+            document.getElementById('smart-paste-area').value = '';
+            document.getElementById('p-jobId').value = '';
+            document.getElementById('post-modal-title').innerText = '发布家教需求';
+            document.getElementById('post-submit-text').innerText = '确认发布需求';
+            document.getElementById('post-modal').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            const job = jobsData.find(j => j.id === id);
+            if (!job) return;
+            
+            // 清空智能识别区域的上次内容
+            document.getElementById('smart-paste-area').value = '';
+            
+            document.getElementById('p-jobId').value = job.id;
+            document.getElementById('p-address').value = job.address;
+            document.getElementById('p-grade').value = job.grade;
+            document.getElementById('p-subject').value = job.subject;
+            document.getElementById('p-fee').value = job.fee;
+            document.getElementById('p-time').value = job.time;
+            document.getElementById('p-studentInfo').value = job.studentInfo || '';
+            document.getElementById('p-req').value = job.requirement;
+            document.getElementById('p-remark').value = job.remark || '';
+
+            document.getElementById('post-modal-title').innerText = '编辑家教需求';
+            document.getElementById('post-submit-text').innerText = '保存修改';
+            document.getElementById('post-modal').classList.add('active');
+        }
+
+        function closePostModal() { document.getElementById('post-modal').classList.remove('active'); }
+
+        // 智能解析粘贴文本
+        function smartParse() {
+            const text = document.getElementById('smart-paste-area').value.trim();
+            if (!text) {
+                return customAlert('提示', '请先在上方文本框内粘贴信息', 'info');
+            }
+
+            // 简单正则匹配规则 (可根据实际情况不断优化)
+            const patterns = {
+                address: /(?:地址|位置|小区|坐标)[:：\s]+([^\n]+)/i,
+                grade: /(?:年级|学生)[:：\s]+([^\n]+)/i,
+                subject: /(?:科目|补习|学科)[:：\s]+([^\n]+)/i,
+                studentInfo: /(?:情况|基础|成绩)[:：\s]+([^\n]+)/i,
+                time: /(?:时间|安排|频率)[:：\s]+([^\n]+)/i,
+                fee: /(?:费用|价格|薪水|报酬|课酬)[:：\s]+([^\n]+)/i,
+                requirement: /(?:要求|教员|老师)[:：\s]+([^\n]+)/i,
+                remark: /(?:备注|说明|其他)[:：\s]+([^\n]+)/i,
+            };
+
+            const data = {
+                address: '', grade: '', subject: '', studentInfo: '',
+                time: '', fee: '', requirement: '', remark: ''
+            };
+
+            // 1. 尝试使用明确的冒号/空格标识符进行提取
+            for (const [key, regex] of Object.entries(patterns)) {
+                const match = text.match(regex);
+                if (match && match[1]) {
+                    data[key] = match[1].trim();
+                }
+            }
+
+            // 2. 如果第一步有些核心字段没取到，尝试通过关键字猜测单行信息
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+            lines.forEach(line => {
+                if (!data.grade && (line.includes('初') || line.includes('高') || line.includes('小') || line.includes('年级'))) {
+                    if (!line.includes('要求')) data.grade = line;
+                }
+                if (!data.subject && (line.includes('语文') || line.includes('数学') || line.includes('英语') || line.includes('物理') || line.includes('化学'))) {
+                    if (!line.includes('要求') && !line.includes('备注')) data.subject = line;
+                }
+                if (!data.fee && (line.includes('/h') || line.includes('小时') || line.includes('次'))) {
+                    if (line.match(/\d+/)) data.fee = line;
+                }
+            });
+
+            // 填充表单
+            if(data.address) document.getElementById('p-address').value = data.address;
+            if(data.grade) document.getElementById('p-grade').value = data.grade;
+            if(data.subject) document.getElementById('p-subject').value = data.subject;
+            if(data.studentInfo) document.getElementById('p-studentInfo').value = data.studentInfo;
+            if(data.time) document.getElementById('p-time').value = data.time;
+            if(data.fee) document.getElementById('p-fee').value = data.fee;
+            if(data.requirement) document.getElementById('p-req').value = data.requirement;
+            if(data.remark) document.getElementById('p-remark').value = data.remark;
+
+            // 提示用户检查
+            customAlert('解析完成', '已尽可能为您提取信息并填入表单，<strong class="text-red-500">请务必人工核对修改后再提交！</strong>', 'success');
+        }
+
+        async function submitPost(e) {
+            e.preventDefault();
+            const btnText = document.getElementById('post-submit-text');
+            const originalText = btnText.innerText;
+            const btn = document.getElementById('post-submit-btn');
+            
+            btnText.innerText = '提交中...';
+            btn.disabled = true;
+
+            const jobId = document.getElementById('p-jobId').value;
+            const isEdit = !!jobId;
+
+            const payload = {
+                address: document.getElementById('p-address').value,
+                grade: document.getElementById('p-grade').value,
+                subject: document.getElementById('p-subject').value,
+                studentInfo: document.getElementById('p-studentInfo').value,
+                time: document.getElementById('p-time').value,
+                fee: document.getElementById('p-fee').value,
+                requirement: document.getElementById('p-req').value,
+                remark: document.getElementById('p-remark').value
+            };
+
+            if (isEdit) payload.id = jobId;
+
+            try {
+                const res = await apiFetch(isEdit ? '/api/tutor/job/edit' : '/api/tutor/job/post', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    closePostModal();
+                    document.getElementById('post-form').reset();
+                    customAlert(isEdit ? '保存成功' : '发布成功', isEdit ? '家教需求已更新。' : '您的家教需求已成功发布到大厅。', 'success');
+                    if (currentTab === 'published' || currentTab === 'open') fetchJobs();
+                    else switchTab('published');
+                } else {
+                    const data = await res.json();
+                    customAlert(isEdit ? '保存失败' : '发布失败', data.error || '无法提交，请稍后再试。', 'error');
+                }
+            } catch (e) {
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } finally {
+                btnText.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // 接单逻辑
+        function openApplyModal(id) {
+            if (!getToken()) return goToLogin();
+            document.getElementById('a-jobId').value = id;
+            document.getElementById('apply-modal').classList.add('active');
+        }
+        function closeApplyModal() { document.getElementById('apply-modal').classList.remove('active'); }
+
+        async function submitApply(e) {
+            e.preventDefault();
+            const btn = document.getElementById('apply-submit-btn');
+            btn.innerText = '申请中...';
+            btn.disabled = true;
+
+            try {
+                const res = await apiFetch('/api/tutor/job/accept', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: document.getElementById('a-jobId').value,
+                        name: document.getElementById('a-name').value,
+                        phone: document.getElementById('a-phone').value
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    closeApplyModal();
+                    customAlert('接单成功', '您已成功接下该家教单，请注意查看企业微信群通知或等待教务联系。', 'success');
+                    switchTab('accepted');
+                } else {
+                    customAlert('接单失败', data.error || '该岗位可能已被抢走或发生错误。', 'error');
+                }
+            } catch (e) {
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } finally {
+                btn.innerText = '确认申请接单';
+                btn.disabled = false;
+            }
+        }
+
+        // 删除 & 取消逻辑
+        function deleteJob(id) {
+            if (!getToken()) return goToLogin();
+            customConfirm('删除岗位', '确定要永久删除这个家教岗位吗？此操作不可恢复。', async () => {
+                try {
+                    const res = await apiFetch('/api/tutor/job/delete', { method: 'POST', body: JSON.stringify({ id }) });
+                    if (res.ok) {
+                        customAlert('删除成功', '岗位已删除', 'success');
+                        fetchJobs();
+                    } else {
+                        customAlert('删除失败', '无法删除该岗位，请稍后再试', 'error');
+                    }
+                } catch (e) {
+                    customAlert('网络错误', '请检查网络连接', 'error');
+                }
+            });
+        }
+
+        function cancelApply(id) {
+            if (!getToken()) return goToLogin();
+            customConfirm('取消接单', '确定要放弃这个家教单并将其退回大厅吗？', async () => {
+                try {
+                    const res = await apiFetch('/api/tutor/job/cancel', { method: 'POST', body: JSON.stringify({ id }) });
+                    if (res.ok) {
+                        customAlert('已取消', '该订单已退回大厅', 'success');
+                        fetchJobs();
+                    } else {
+                        customAlert('取消失败', '操作失败，请重试', 'error');
+                    }
+                } catch (e) {
+                    customAlert('网络错误', '请检查网络连接', 'error');
+                }
+            });
+        }
+
+        // 初始化
+        initUI();
+        fetchJobs();
+    </script>
+
+<!-- 温馨的欢迎回来 Toast 提示 -->
+    <div id="welcome-toast" class="glass-dark rounded-full py-3 px-6 shadow-2xl flex items-center gap-4">
+        <div class="w-10 h-10 bg-brand-accent/20 rounded-full flex items-center justify-center shrink-0">
+            <i data-lucide="sparkles" class="w-5 h-5 text-brand-accent"></i>
+        </div>
+        <div class="flex flex-col pr-2">
+            <span class="text-white font-bold text-sm tracking-wide">欢迎回来！</span>
+            <span id="welcome-toast-msg" class="text-white/70 text-xs mt-0.5">很高兴再次见到您</span>
+        </div>
+    </div>
+
+    
+<!-- 主页统一登录/注册弹窗 -->
+    <div id="auth-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <!-- 装饰背景 -->
+            <div class="absolute -top-20 -right-20 w-48 h-48 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="p-8 relative z-10">
+                <button onclick="closeAuthModal()" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+                
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-brand-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="user-circle" class="w-8 h-8 text-brand-primary"></i>
+                    </div>
+                    <h3 id="auth-title" class="text-2xl font-serif font-bold text-brand-primary mb-2">欢迎来到星途启航</h3>
+                    <p class="text-sm text-brand-primary/60">家教兼职与自习室统一通行证</p>
+                </div>
+
+                <!-- 登录注册 Tab -->
+                <div class="flex border-b border-brand-primary/10 mb-6">
+                    <button type="button" onclick="switchAuthTab('login')" id="auth-tab-login" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent">账号登录</button>
+                    <button type="button" onclick="switchAuthTab('register')" id="auth-tab-register" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent">免费注册</button>
+                </div>
+                
+                <form id="auth-form" onsubmit="submitAuth(event)" class="space-y-4">
+                    <!-- 通用：邮箱地址 -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">邮箱地址</label>
+                        <div class="flex gap-2">
+                            <div class="relative flex-grow">
+                                <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="email" id="auth-email" required placeholder="your@email.com" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            </div>
+                            <button type="button" id="auth-send-btn" onclick="sendAuthCode()" class="hidden px-4 py-3 bg-brand-primary/5 text-brand-primary text-sm font-medium rounded-xl hover:bg-brand-primary/10 transition-colors border-none cursor-pointer whitespace-nowrap">获取验证码</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 注册/找回密码特有：验证码 -->
+                    <div id="auth-code-group" class="space-y-1 hidden">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">验证码</label>
+                        <div class="relative">
+                            <i data-lucide="key" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="auth-code" placeholder="6位数字" maxlength="6" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary tracking-widest text-center text-lg transition-all">
+                        </div>
+                    </div>
+
+                    <!-- 通用：密码 -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">密码</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="password" id="auth-password" required placeholder="请输入密码" class="w-full pl-11 pr-12 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-icon-1')" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-primary/40 hover:text-brand-primary cursor-pointer border-none bg-transparent outline-none">
+                                <i data-lucide="eye" id="eye-icon-1" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 注册/找回密码特有：确认密码 -->
+                    <div id="auth-confirm-group" class="space-y-1 hidden">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">确认密码</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="password" id="auth-confirm-password" placeholder="再次输入密码" class="w-full pl-11 pr-12 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('auth-confirm-password', 'eye-icon-2')" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-primary/40 hover:text-brand-primary cursor-pointer border-none bg-transparent outline-none">
+                                <i data-lucide="eye" id="eye-icon-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 登录特有：忘记密码 -->
+                    <div id="auth-forgot-group" class="text-right">
+                        <button type="button" onclick="switchAuthTab('forgot')" class="text-xs text-brand-primary/60 hover:text-brand-accent transition-colors bg-transparent border-none cursor-pointer outline-none">忘记密码？</button>
+                    </div>
+
+                    <button type="submit" id="auth-submit-btn" class="w-full mt-6 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg shadow-brand-primary/20 border-none outline-none cursor-pointer flex justify-center items-center gap-2">
+                        <span id="auth-btn-text">确认登录</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <!-- 返回登录按钮 (仅在忘记密码时显示) -->
+                    <button type="button" id="auth-back-login" onclick="switchAuthTab('login')" class="hidden w-full py-3 bg-transparent text-brand-primary/60 text-sm hover:text-brand-primary font-medium rounded-xl transition-colors border-none outline-none cursor-pointer text-center">
+                        返回登录
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+<script>
+function openAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.add('active');
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.remove('active');
+            // 关闭弹窗时清空表单并重置状态
+            setTimeout(() => {
+                document.getElementById('auth-form').reset();
+                const sendBtn = document.getElementById('auth-send-btn');
+                sendBtn.innerText = '获取验证码';
+                sendBtn.disabled = false;
+                // 重置倒计时定时器（如果有）
+                if (window.authTimer) {
+                    clearInterval(window.authTimer);
+                    window.authTimer = null;
+                }
+            }, 300);
+        }
+
+        let currentAuthMode = 'login';
+
+        function renderAuthSubmitButton(mode, isLoading = false) {
+            const btn = document.getElementById('auth-submit-btn');
+            if (!btn) return;
+
+            const defaultTextMap = { login: '确认登录', register: '免费注册', forgot: '重置密码' };
+            const loadingTextMap = { login: '登录中...', register: '注册中...', forgot: '重置中...' };
+            const text = isLoading ? loadingTextMap[mode] : defaultTextMap[mode];
+            const iconName = isLoading ? 'loader-2' : 'arrow-right';
+            const iconClass = isLoading ? 'w-4 h-4 animate-spin' : 'w-4 h-4';
+
+            btn.innerHTML = `<span id="auth-btn-text">${text}</span><i data-lucide="${iconName}" class="${iconClass}"></i>`;
+            lucide.createIcons();
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        function switchAuthTab(tab) {
+            currentAuthMode = tab;
+            const loginTab = document.getElementById('auth-tab-login');
+            const registerTab = document.getElementById('auth-tab-register');
+            const authTitle = document.getElementById('auth-title');
+            
+            const codeGroup = document.getElementById('auth-code-group');
+            const codeInput = document.getElementById('auth-code');
+            const sendBtn = document.getElementById('auth-send-btn');
+            const confirmGroup = document.getElementById('auth-confirm-group');
+            const confirmInput = document.getElementById('auth-confirm-password');
+            const forgotGroup = document.getElementById('auth-forgot-group');
+            const backLoginBtn = document.getElementById('auth-back-login');
+
+            // Reset forms & visuals
+            document.getElementById('auth-form').reset();
+            loginTab.parentElement.style.display = tab === 'forgot' ? 'none' : 'flex';
+
+            if (tab === 'login') {
+                loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
+                registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
+                authTitle.innerText = "欢迎回到星途启航";
+                
+                codeGroup.classList.add('hidden');
+                codeInput.required = false;
+                sendBtn.classList.add('hidden');
+                confirmGroup.classList.add('hidden');
+                confirmInput.required = false;
+                forgotGroup.classList.remove('hidden');
+                backLoginBtn.classList.add('hidden');
+            } else if (tab === 'register') {
+                registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
+                loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
+                authTitle.innerText = "注册星途启航通行证";
+                
+                codeGroup.classList.remove('hidden');
+                codeInput.required = true;
+                sendBtn.classList.remove('hidden');
+                confirmGroup.classList.remove('hidden');
+                confirmInput.required = true;
+                forgotGroup.classList.add('hidden');
+                backLoginBtn.classList.add('hidden');
+            } else if (tab === 'forgot') {
+                authTitle.innerText = "找回密码";
+                
+                codeGroup.classList.remove('hidden');
+                codeInput.required = true;
+                sendBtn.classList.remove('hidden');
+                confirmGroup.classList.remove('hidden');
+                confirmInput.required = true;
+                forgotGroup.classList.add('hidden');
+                backLoginBtn.classList.remove('hidden');
+            }
+
+            renderAuthSubmitButton(tab);
+        }
+
+        function showSendSuccessToast() {
+            const toast = document.getElementById('send-success-toast');
+            toast.style.top = '32px';
+            toast.style.opacity = '1';
+            
+            setTimeout(() => {
+                toast.style.top = '-100px';
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+
+        async function sendAuthCode() {
+            const email = document.getElementById('auth-email').value;
+            if (!email) return customAlert('提示', '请填写邮箱', 'error');
+            
+            const btn = document.getElementById('auth-send-btn');
+            btn.disabled = true;
+            btn.innerText = '发送中...';
+            
+            try {
+                const res = await fetch('/api/tutor/send-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                
+                if (res.ok && data.success) {
+                    if (data.debugCode) {
+                        customAlert('测试环境提示', `您的验证码是: <strong class="text-xl text-brand-accent tracking-widest">${data.debugCode}</strong>\n(线上环境配好邮件后不会弹出此提示)`, 'info');
+                    } else {
+                        // 使用新的悬浮窗代替 customAlert
+                        showSendSuccessToast();
+                    }
+
+                    let sec = 60;
+                    window.authTimer = setInterval(() => {
+                        sec--;
+                        btn.innerText = `${sec}s 后重发`;
+                        if (sec <= 0) {
+                            clearInterval(window.authTimer);
+                            window.authTimer = null;
+                            btn.innerText = '获取验证码';
+                            btn.disabled = false;
+                        }
+                    }, 1000);
+                } else {
+                    customAlert('发送失败', data.error || '无法发送验证码', 'error');
+                    btn.innerText = '获取验证码';
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+                btn.innerText = '获取验证码';
+                btn.disabled = false;
+            }
+        }
+
+        // 专门的欢迎 Toast 函数
+        function showWelcomeToast(email) {
+            const toast = document.getElementById('welcome-toast');
+            const msg = document.getElementById('welcome-toast-msg');
+            msg.innerText = email ? `很高兴再次见到您，${email}` : '很高兴再次见到您';
+            
+            // 播放入场动画
+            toast.classList.add('show');
+            
+            // 3.5秒后自动收起
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        async function submitAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const btn = document.getElementById('auth-submit-btn');
+            
+            // 表单校验
+            if (currentAuthMode !== 'login') {
+                const confirmPassword = document.getElementById('auth-confirm-password').value;
+                if (password !== confirmPassword) {
+                    return customAlert('提示', '两次输入的密码不一致', 'error');
+                }
+                if (password.length < 6) {
+                    return customAlert('提示', '密码长度不能少于6位', 'error');
+                }
+            }
+
+            const code = document.getElementById('auth-code').value;
+            
+            renderAuthSubmitButton(currentAuthMode, true);
+            
+            try {
+                let url = '/api/tutor/login'; // default login
+                if (currentAuthMode === 'register') url = '/api/tutor/register';
+                if (currentAuthMode === 'forgot') url = '/api/tutor/reset-password';
+
+                const payload = { email, password };
+                if (currentAuthMode !== 'login') payload.code = code;
+
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    if (currentAuthMode === 'forgot') {
+                        const resetEmail = email;
+                        switchAuthTab('login');
+                        document.getElementById('auth-email').value = resetEmail;
+                        customAlert('重置成功', '密码已重置，请直接使用新密码登录。', 'success');
+                    } else {
+                        localStorage.setItem('tutor_token', data.token);
+                        localStorage.setItem('tutor_email', data.email);
+                        closeAuthModal();
+                        initUI();
+                        if (typeof fetchJobs === "function") fetchJobs();
+                        if (typeof fetchReservations === "function") fetchReservations();
+                        
+                        if (currentAuthMode === 'login') {
+                            showWelcomeToast(data.email);
+                        } else {
+                            customAlert('注册成功', `欢迎来到星途启航，${data.email}`, 'success');
+                        }
+                    }
+                } else {
+                    customAlert('操作失败', data.error || '验证码或密码不正确', 'error');
+                }
+            } catch (e) {
+                console.error('认证流程异常:', e);
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } finally {
+                renderAuthSubmitButton(currentAuthMode);
+            }
+        }
+
+        
+</script>
+</body>
+</html>

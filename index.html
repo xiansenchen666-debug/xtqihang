@@ -1,0 +1,1714 @@
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星途启航教育 | Xingtu Qihang Education</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7', // 米白色底色
+                            primary: '#1A2B3C', // 深藏青
+                            accent: '#C5A059', // 柔和金色
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1A2B3C;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* 玻璃拟态 (Glassmorphism) */
+        .glass {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+
+        .glass-dark {
+            background: rgba(26, 43, 60, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* 细腻微动效 */
+        .btn-hover {
+            transition: all 0.4s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4);
+            background-color: #b59048; /* Slightly darker gold */
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(26, 43, 60, 0.05);
+            box-shadow: none;
+        }
+
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1);
+        }
+
+        .service-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: scaleY(0);
+            transform-origin: top center;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+            pointer-events: none;
+        }
+
+        .service-menu-group.is-open .service-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: scaleY(1);
+            pointer-events: auto;
+        }
+
+        /* 下拉菜单子项的级联动画 */
+        .service-dropdown .grid > a {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .service-menu-group.is-open .service-dropdown .grid > a {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .service-menu-group.is-open .service-dropdown .grid > a:nth-child(1) { transition-delay: 0.05s; }
+        .service-menu-group.is-open .service-dropdown .grid > a:nth-child(2) { transition-delay: 0.10s; }
+        .service-menu-group.is-open .service-dropdown .grid > a:nth-child(3) { transition-delay: 0.15s; }
+        .service-menu-group.is-open .service-dropdown .grid > a:nth-child(4) { transition-delay: 0.20s; }
+        .service-menu-group.is-open .service-dropdown .grid > a:nth-child(5) { transition-delay: 0.25s; }
+        .service-menu-group.is-open .service-dropdown .grid > a:nth-child(6) { transition-delay: 0.30s; }
+
+        .service-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            right: 0;
+            height: 12px;
+        }
+
+        /* 滚动入场动画类 */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, visibility;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* 老师悬浮窗动画 */
+        .teacher-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .teacher-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: all 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            text-align: center;
+            transform: translateY(20px);
+            z-index: 10;
+        }
+
+        .teacher-card:hover .teacher-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .teacher-card img {
+            transition: transform 0.7s ease;
+            will-change: transform;
+        }
+        
+        .teacher-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* 自定义网格非对称布局 */
+        .asymmetric-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+        }
+        
+        /* 预约表单弹出层 */
+        #booking-modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #booking-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #booking-modal .modal-content {
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translateY(20px) scale(0.95);
+        }
+        #booking-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+        
+        /* 错误提示弹窗 */
+        #error-modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #error-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #error-modal .modal-content {
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translateY(20px) scale(0.95);
+        }
+        #error-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+        /* 欢迎提示 Toast 样式 */
+        #welcome-toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            opacity: 0;
+            z-index: 9999;
+        }
+        #welcome-toast.show {
+            bottom: 32px;
+            opacity: 1;
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass py-4 px-6 md:px-12 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center relative z-50">
+            <div class="relative inline-block font-serif font-bold text-brand-primary tracking-tight">
+                <span class="absolute -top-2.5 -left-1 text-[10px] text-brand-accent leading-none">星途</span>
+                <span class="text-2xl">启航教育</span>
+            </div>
+            <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-8 text-base font-medium">
+                <a href="#about" class="hover:text-brand-accent transition-colors">关于我们</a>
+                <div class="service-menu-group relative">
+                    <button type="button" id="desktop-services-trigger" class="flex items-center gap-1.5 hover:text-brand-accent transition-colors text-brand-primary border-none bg-transparent cursor-pointer outline-none p-0">
+                        核心业务
+                        <i data-lucide="chevron-down" id="desktop-services-icon" class="w-4 h-4 transition-transform"></i>
+                    </button>
+                    <!-- 竖向下拉菜单：窄宽度，单列布局 -->
+                    <div class="service-dropdown absolute left-1/2 top-full mt-6 -translate-x-1/2 w-[20rem] rounded-[1.75rem] bg-white/95 backdrop-blur-xl border border-white/70 shadow-2xl shadow-brand-primary/10 p-4">
+                        <div class="grid grid-cols-1 gap-2">
+                            <a href="/k12" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-brand-accent/10 text-brand-accent flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">K12教育</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">提分与升学</div>
+                                </div>
+                            </a>
+                            <a href="/paper-guidance" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="scroll-text" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">论文指导</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">专业学术辅导</div>
+                                </div>
+                            </a>
+                            <a href="/adult-education" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">成人教育</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">口语与职场</div>
+                                </div>
+                            </a>
+                            <a href="/tutor" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="briefcase" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">家教兼职</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">供需双向匹配</div>
+                                </div>
+                            </a>
+                            <a href="/study-room" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="coffee" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">自习室</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">安静学习空间</div>
+                                </div>
+                            </a>
+                            <a href="/ai-eval" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-brand-accent/10 text-brand-accent flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="scan-line" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">AI评估</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">家校协同分析</div>
+                                </div>
+                            </a>
+                            <a href="/ai-study-room.html" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">AI 自习室</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">智能督学与陪伴</div>
+                                </div>
+                            </a>
+                            <a href="/junior-english-plan.html" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
+                                <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-sm font-bold text-brand-primary">初中英语</div>
+                                    <div class="mt-0.5 text-xs text-brand-primary/50">AI培优教学方案</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <a href="#team" class="hover:text-brand-accent transition-colors">师资力量</a>
+                <a href="#contact" class="hover:text-brand-accent transition-colors">联系我们</a>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <span id="user-info-main" class="text-sm font-medium text-brand-primary/80 hidden"></span>
+                <button id="auth-btn-main" onclick="openAuthModal()" class="inline-flex items-center justify-center px-6 py-2.5 bg-brand-primary text-brand-bg text-sm font-medium rounded-full btn-hover hover:!bg-brand-primary hover:!shadow-lg cursor-pointer border-none outline-none">
+                    登录 / 注册
+                </button>
+            </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden text-brand-primary border-none outline-none bg-transparent cursor-pointer relative z-[60]">
+                <i data-lucide="menu" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu (Moved outside nav to avoid relative positioning issues) -->
+    <div id="mobile-menu" class="fixed inset-0 w-full h-screen bg-[#FDFBF7] z-[60] transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <!-- Close button inside the menu -->
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-brand-primary border-none outline-none bg-transparent cursor-pointer p-2">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <div class="relative inline-block font-serif font-bold text-brand-primary tracking-tight mb-8">
+            <span class="absolute -top-2.5 -left-1 text-[10px] text-brand-accent leading-none">星途</span>
+            <span class="text-3xl">启航教育</span>
+        </div>
+        <a href="#about" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">关于我们</a>
+        <div class="flex flex-col items-center">
+            <button type="button" onclick="toggleMobileServicesMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors flex items-center gap-2 border-none bg-transparent cursor-pointer outline-none">
+                核心业务
+                <i data-lucide="chevron-down" id="mobile-services-icon" class="w-5 h-5 transition-transform"></i>
+            </button>
+            <div id="mobile-services-submenu" class="hidden mt-5 w-full max-w-xs glass rounded-[2rem] px-6 py-5">
+                <div class="flex flex-col items-center gap-4 text-lg">
+                    <a href="/k12" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">K12教育</a>
+                    <a href="/paper-guidance" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">论文指导</a>
+                    <a href="/adult-education" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">成人教育</a>
+                    <a href="/tutor" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">家教兼职</a>
+                    <a href="/study-room" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">自习室</a>
+                    <a href="/ai-eval" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">AI评估</a>
+                    <a href="/ai-study-room.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">AI 自习室</a>
+                    <a href="/junior-english-plan.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">初中英语方案</a>
+                </div>
+            </div>
+        </div>
+        <a href="#team" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">师资力量</a>
+        <a href="#contact" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">联系我们</a>
+        <div class="mt-8 flex flex-col items-center gap-4">
+            <span id="user-info-mobile" class="text-sm font-medium text-brand-primary/80 hidden"></span>
+            <button id="auth-btn-mobile" onclick="toggleMobileMenu(); openAuthModal();" class="px-10 py-4 bg-brand-primary text-brand-bg text-lg font-medium rounded-full border-none outline-none shadow-lg">
+                登录 / 注册
+            </button>
+        </div>
+    </div>
+
+    <!-- Hero Section: 非对称设计 (关于我们) -->
+    <section id="about" class="relative min-h-screen flex items-center pt-24 pb-12 px-6 md:px-12 overflow-hidden">
+        <!-- 背景装饰圆 -->
+        <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-brand-accent/15 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[10%] left-[-10%] w-[30rem] h-[30rem] bg-brand-primary/5 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto w-full asymmetric-grid items-center relative z-10">
+            <!-- 左侧 Slogan (占7列) -->
+            <div class="col-span-12 md:col-span-7 pr-0 md:pr-12 fade-in-section">
+                <div class="inline-block mb-6 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase glass">
+                    Xingtu Qihang Education
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-[5rem] font-serif font-bold leading-[1.1] mb-8 text-brand-primary">
+                    赋能成长，<br>
+                    <span class="italic text-brand-accent">语见未来</span>
+                </h1>
+                <p class="text-lg text-brand-primary/70 mb-10 max-w-lg leading-relaxed font-light">
+                    打破传统教学模式。我们为K12学生与成人提供定制化的英语与全科辅导，用专业点亮前程，用语言连接世界。
+                </p>
+                <div class="flex flex-col sm:flex-row gap-5">
+                    <a href="#core-services" class="inline-flex items-center justify-center px-8 py-4 bg-brand-accent text-white font-medium rounded-full btn-hover group">
+                        探索课程
+                        <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <button onclick="openBookingModal()" class="inline-flex items-center justify-center px-8 py-4 bg-transparent border border-brand-primary text-brand-primary font-medium rounded-full btn-hover btn-outline cursor-pointer outline-none">
+                        免费评估
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧 图像/抽象 (占5列) - 错位排版 -->
+            <div class="col-span-12 md:col-span-5 relative mt-16 md:mt-0 fade-in-section" style="transition-delay: 0.2s;">
+                <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl z-10">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Studio learning environment" class="w-full h-full object-cover">
+                </div>
+                <!-- 悬浮装饰卡片 - 玻璃拟态 -->
+                <div class="absolute -bottom-10 -left-16 glass p-6 rounded-2xl z-20 hidden md:block w-64">
+                    <div class="flex items-center gap-4 mb-3">
+                        <div class="w-12 h-12 rounded-full bg-brand-accent/20 flex items-center justify-center text-brand-accent">
+                            <i data-lucide="star" class="fill-current w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-serif font-bold text-brand-primary">10+</div>
+                            <div class="text-xs text-brand-primary/60 uppercase tracking-widest font-semibold mt-1">Years Exp.</div>
+                        </div>
+                    </div>
+                    <p class="text-sm font-medium text-brand-primary/80">专注个性化精英教育与语言能力提升</p>
+                </div>
+                <!-- 装饰线条 -->
+                <div class="absolute -top-6 -right-6 w-32 h-32 border-t-2 border-r-2 border-brand-accent rounded-tr-3xl z-0"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Services Section -->
+    <section id="core-services" class="px-6 md:px-12 pb-20 -mt-2 relative z-20">
+        <div class="max-w-7xl mx-auto fade-in-section">
+            <div class="glass rounded-[2rem] p-6 md:p-8 shadow-xl">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+                    <div>
+                        <div class="text-[11px] font-bold tracking-[0.25em] uppercase text-brand-accent mb-3">Core Services</div>
+                        <h2 class="text-3xl md:text-4xl font-serif font-bold text-brand-primary">首页快速直达核心业务</h2>
+                    </div>
+                    <div class="text-sm font-bold text-brand-primary/55">点击卡片直达独立业务页面</div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <a href="/k12" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-4">
+                            <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">K12教育</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">同步辅导与提分</div>
+                    </a>
+                    <a href="/paper-guidance" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mb-4">
+                            <i data-lucide="scroll-text" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">论文指导</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">专业学术辅导</div>
+                    </a>
+                    <a href="/adult-education" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mb-4">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">成人教育</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">口语商务与考试</div>
+                    </a>
+                    <a href="/tutor" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                            <i data-lucide="briefcase" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">家教兼职</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">需求发布与接单</div>
+                    </a>
+                    <a href="/study-room" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+                            <i data-lucide="coffee" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">自习室</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">安静舒适学习区</div>
+                    </a>
+                    <a href="/ai-eval" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-4">
+                            <i data-lucide="scan-line" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">AI评估</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">成绩分析与画像</div>
+                    </a>
+                    <a href="/ai-study-room.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
+                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">AI 自习室</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">智能督学与陪伴</div>
+                    </a>
+                    <a href="/junior-english-plan.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">初中英语</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">AI培优教学方案</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section: 交互式师资展示 -->
+    <section id="team" class="py-32 px-6 md:px-12 bg-[#FDFBF7]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 fade-in-section">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-6">
+                    遇见你的<span class="italic text-brand-accent">良师</span>
+                </h2>
+                <p class="text-brand-primary/70 max-w-2xl mx-auto text-lg">
+                    每一位导师都经过严格筛选，不仅拥有名校背景，更具备丰富的实战教学经验与教育热忱。
+                </p>
+            </div>
+
+            <!-- 师资力量 - 高端国际化卡片流 (Premium Box Flow) -->
+            <div class="max-w-5xl mx-auto mt-16 space-y-6 fade-in-section pb-12">
+                
+                <!-- 老师 1: Jayu -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 opacity-[0.03] group-hover:opacity-10 transition-opacity duration-500 pointer-events-none">
+                        <i data-lucide="award" class="w-48 h-48 text-brand-primary"></i>
+                    </div>
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-4xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Jayu</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Principal / 校长</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">欧洲名校硕士</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">15年+ 教研带头人</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">
+                                拥有多年国际化教育视野。曾主导研发《K12沉浸式全科提分体系》，成功帮助超 <strong class="text-brand-accent font-bold text-lg">500+</strong> 名中考/高考学子总分提升 80-150 分；在成人英语领域，指导 <strong class="text-brand-accent font-bold text-lg">200+</strong> 职场精英实现外企面试通关。
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>K12:</strong> 帮助基础薄弱学员半年考入市重点</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>成人:</strong> 零基础学员3个月达到流利商务交流</li>
+                                </ul>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-brand-primary/5">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold text-brand-accent bg-brand-accent/10 rounded-lg">
+                                    <i data-lucide="trophy" class="w-3 h-3"></i> 荣获“年度最具影响力教育开拓者”
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 老师 2: Cary -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 opacity-[0.03] group-hover:opacity-10 transition-opacity duration-500 pointer-events-none">
+                        <i data-lucide="award" class="w-48 h-48 text-brand-primary"></i>
+                    </div>
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-4xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Cary</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Vice Principal / 副校长</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">新加坡理工</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">10年+ 一线教学经验</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">
+                                专注于高质量课程体系的设计与标准化建设。独创《语言肌肉记忆法》，成功指导 <strong class="text-brand-accent font-bold text-lg">300+</strong> 成人学员从“哑巴英语”蜕变为全英文汇报能手；在K12板块，其带班的学生中考英语平均提分达 25 分。
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>成人:</strong> 辅导IT高管3个月拿下外企Offer</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>K12:</strong> 班级英语平均分稳居年级前三</li>
+                                </ul>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-brand-primary/5">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold text-brand-accent bg-brand-accent/10 rounded-lg">
+                                    <i data-lucide="award" class="w-3 h-3"></i> 荣膺“省十佳成人外语特级讲师”
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 老师 3: Eric -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 opacity-[0.03] group-hover:opacity-10 transition-opacity duration-500 pointer-events-none">
+                        <i data-lucide="award" class="w-48 h-48 text-brand-primary"></i>
+                    </div>
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-4xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Eric</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Academic Director / 教务</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 硕士</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">香港大学 博士</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">
+                                顶尖学府复合背景，深谙高压学习下的时间管理。在K12升学规划中，为 <strong class="text-brand-accent font-bold text-lg">150+</strong> 家庭提供过定制化择校与培优方案；同时主导成人职场英语的学情跟踪，确保 <strong class="text-brand-accent font-bold text-lg">95%</strong> 以上的学员达成预期目标。
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>K12:</strong> 指导数十名高三生突破一本线</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>成人:</strong> 为企业定制百人级英语内训方案</li>
+                                </ul>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-brand-primary/5">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold text-brand-accent bg-brand-accent/10 rounded-lg">
+                                    <i data-lucide="star" class="w-3 h-3"></i> 荣获“全国大学生英语竞赛特等奖指导教师”
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 老师 4: Dr. Liu -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 opacity-[0.03] group-hover:opacity-10 transition-opacity duration-500 pointer-events-none">
+                        <i data-lucide="graduation-cap" class="w-48 h-48 text-brand-primary"></i>
+                    </div>
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-4xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Dr. Liu</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-accent mt-2">Admissions / 升学顾问</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent text-white rounded-full shadow-md">清华大学 直博生</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-white text-brand-primary/70 border border-brand-primary/10 rounded-full">环境/生态/海洋/大气</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">
+                                顶尖名校博士背景，具备深厚的理工科学术功底。近年累计指导 <strong class="text-brand-accent font-bold text-lg">40余名</strong> 本科/硕士生成功拿到C9联盟及海外Top50名校的保研与全奖博士Offer，文书与套磁通过率极高。
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>保研:</strong> 辅导双非院校学生逆袭985高校保研</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>申博:</strong> 助力学员斩获常春藤全额奖学金Ph.D.</li>
+                                </ul>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-brand-primary/5 flex items-center justify-between">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold text-brand-accent bg-brand-accent/10 rounded-lg">
+                                    <i data-lucide="info" class="w-3 h-3"></i> 每周限量辅导 1-2 人
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 教授智库 1: Prof. Alexander Wang -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Prof. Alexander Wang</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Guest Prof. / 特聘顾问</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 教授</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">计算机科学与技术系</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">人工智能与计算机科学领域的资深学者，主持多项国家级重点科研项目，为拔尖学员提供降维打击级别的学术视野。</p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8">
+                            <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus</h5>
+                            <ul class="text-sm text-brand-primary/80 space-y-2">
+                                <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> 顶尖科研项目背景提升指导</li>
+                                <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> 高阶学术论文发表咨询</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 教授智库 2: Prof. Sophia Zhang -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Prof. Sophia Zhang</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Guest Prof. / 特聘顾问</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 教授</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">经济管理学院</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">曾任多家跨国企业战略顾问，深谙顶级商学院选拔逻辑。擅长从商业实战角度重塑学员的领导力与申请故事线。</p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8">
+                            <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus</h5>
+                            <ul class="text-sm text-brand-primary/80 space-y-2">
+                                <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> 商科顶级院校保研战略规划</li>
+                                <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> 商赛指导与核心领导力培养</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 博士团队 1: Dr. Michael Li -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Dr. Michael Li</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Senior Tutor / 金牌讲师</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 博士</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">应用数学专业</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">前高中数学联赛一等奖获得者。讲课逻辑严密，善于拆解复杂定理。在K12拔高辅导中，已带出 <strong class="text-brand-accent font-bold text-lg">20余名</strong> 省市级数学竞赛获奖学子，多名学生凭借其推荐信通过强基计划。</p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>K12竞赛:</strong> 辅导多名高二学生斩获CMO银牌</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>强基冲刺:</strong> 帮助偏科理科生圆梦清北强基班</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 博士团队 2: Dr. Chloe Chen -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Dr. Chloe Chen</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Senior Tutor / 金牌讲师</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 博士</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">工程物理系</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">深谙中高考物理命题规律与国际物理竞赛考点。她将枯燥的物理模型具象化，帮助 <strong class="text-brand-accent font-bold text-lg">近百名</strong> K12学子迅速突破理综瓶颈，曾带出高考物理满分学员。</p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>K12理综:</strong> 辅导理综薄弱生单科提分30+</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>物理竞赛:</strong> 带领3人小队斩获全国物理竞赛一等奖</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 博士团队 3: Dr. Ryan Zhao -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Dr. Ryan Zhao</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Senior Tutor / 金牌讲师</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 博士</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">自动化系</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">全栈型AI与编程导师，信奥赛（NOIP）资深教练。他辅导的初高中生已有 <strong class="text-brand-accent font-bold text-lg">10+</strong> 人获得NOIP一等奖，并以此优势顺利通过名校综评与特长生招生。</p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>少儿编程:</strong> 零基础小学生1年通关CSP-J</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>信奥拔高:</strong> 连续3年带出NOIP省一等奖选手</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 博士团队 4: Dr. Olivia Zhou -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Dr. Olivia Zhou</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Senior Tutor / 金牌讲师</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 博士</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">生命科学学院</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">生命科学前沿研究学者，将顶级实验室科研思维融入高中生物教学。主导的“高中生物图谱化记忆法”帮助 <strong class="text-brand-accent font-bold text-lg">200+</strong> 艺考生/体育生在极短时间内完成生化逆袭。</p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>K12高考:</strong> 艺考生考前3个月生物单科提分40+</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>生物奥赛:</strong> 连续2年带出全国生物联赛一等奖</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 博士团队 5: Dr. Daniel Wu -->
+                <div class="group bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-brand-primary/5 hover:shadow-2xl hover:border-brand-accent/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                    <div class="md:w-1/4 relative z-10">
+                        <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Dr. Daniel Wu</h4>
+                        <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/50 mt-2">Admissions / 升学顾问</p>
+                    </div>
+                    <div class="md:w-3/4 flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent rounded-full">清华大学 博士</span>
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-brand-primary/5 text-brand-primary/70 rounded-full">社会科学学院</span>
+                            </div>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed font-medium">文科与社科领域的大满贯导师。高中曾获新概念作文大赛全国一等奖。他擅长从文学、历史等多元维度重塑初高中生的大语文思维，辅导的多名文科生成功斩获省市级中高考高分。</p>
+                        </div>
+                        <div class="md:w-1/2 border-l border-brand-primary/10 pl-0 md:pl-8 flex flex-col justify-between">
+                            <div>
+                                <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-3">Core Focus & Cases</h5>
+                                <ul class="text-sm text-brand-primary/80 space-y-2">
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>K12语文:</strong> 辅导多名学生高考语文达到135+</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-brand-accent shrink-0"></i> <strong>跨考指导:</strong> 帮助50+非科班学生文跨考985</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Not Just Them - Discover More 悬浮探索卡片 -->
+                <div class="group relative overflow-hidden bg-brand-primary text-white rounded-[2rem] p-8 md:p-12 shadow-2xl transition-all duration-500 flex flex-col md:flex-row items-center justify-between gap-8 mt-12 cursor-pointer hover:scale-[1.02]">
+                    <!-- 动态光影背景 -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-brand-accent/0 via-brand-accent/20 to-brand-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 translate-x-[-100%] group-hover:translate-x-[100%] ease-in-out"></div>
+                    <div class="absolute -top-24 -right-12 w-64 h-64 bg-brand-accent/30 rounded-full blur-3xl pointer-events-none group-hover:bg-brand-accent/50 transition-colors duration-500"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 text-center md:text-left w-full md:w-auto">
+                        <div class="w-20 h-20 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0 shadow-inner group-hover:rotate-12 transition-transform duration-500">
+                            <i data-lucide="globe-2" class="w-10 h-10 text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-3xl font-serif font-bold mb-3 tracking-wide">不仅于此 / <span class="text-brand-accent font-light italic">And Beyond...</span></h4>
+                            <p class="text-white/80 text-sm max-w-lg leading-relaxed font-medium">
+                                星途启航教育深度链接全球顶尖智库资源。除了上述核心团队，我们还拥有 <strong class="text-white">50+</strong> 来自清华、北大、常春藤等海内外名校的硕博导师，随时为您提供全维度、降维打击级的学术支持。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="relative z-10 shrink-0 w-full md:w-auto mt-4 md:mt-0">
+                        <button onclick="openBookingModal()" class="w-full md:w-auto px-8 py-4 bg-white text-brand-primary font-bold text-sm uppercase tracking-widest rounded-full hover:bg-brand-accent hover:text-white hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
+                            获取专属导师匹配 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section: 极简联系板块 -->
+    <section id="contact" class="py-32 px-6 md:px-12 bg-white relative">
+        <div class="max-w-4xl mx-auto text-center fade-in-section">
+            <h2 class="text-5xl md:text-7xl font-serif font-bold text-brand-primary mb-8 tracking-tight">
+                开启您的<br><span class="italic text-brand-accent">学习旅程</span>
+            </h2>
+            <p class="text-lg text-brand-primary/60 mb-12 max-w-xl mx-auto font-light leading-relaxed">
+                无论您是为孩子的学业寻求专业指导，还是渴望提升自己的语言能力，我们都随时准备为您提供帮助。
+            </p>
+            
+            <button onclick="openBookingModal()" class="inline-flex items-center justify-center px-10 py-5 bg-brand-primary text-brand-bg text-lg font-medium rounded-full btn-hover shadow-xl mb-24 group hover:!bg-brand-primary border-none outline-none cursor-pointer">
+                预约免费评估
+                <i data-lucide="arrow-up-right" class="ml-2 w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+            </button>
+
+            <!-- 极简地址信息 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-left border-t border-brand-primary/10 pt-16">
+                <div>
+                    <h5 class="text-sm font-bold text-brand-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-brand-accent"></i> Visit Us
+                    </h5>
+                    <p class="text-brand-primary/70 leading-relaxed text-sm">
+                        深圳市宝安区<br>
+                        星途启航教育
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-sm font-bold text-brand-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-brand-accent"></i> Contact
+                    </h5>
+                    <p class="text-brand-primary/70 leading-relaxed text-sm">
+                        T: 15660075902<br>
+                        E: hello@qihang.edu.cn<br>
+                        W: WeChat (QihangEdu)
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-sm font-bold text-brand-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-brand-accent"></i> Hours
+                    </h5>
+                    <p class="text-brand-primary/70 leading-relaxed text-sm">
+                        Mon - Fri: 13:00 - 21:00<br>
+                        Sat - Sun: 09:00 - 18:00
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">
+            &copy; <span data-current-year></span> 星途启航教育 Xingtu Qihang Education. All rights reserved.
+        </p>
+    </footer>
+
+    <!-- 预约表单 玻璃拟态弹窗 (V2 新增) -->
+    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <!-- 弹窗背景蒙层 -->
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+        
+        <!-- 弹窗内容 -->
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8">
+                <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">预约咨询</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">请留下您的联系方式，我们的顾问老师会尽快与您联系。</p>
+                
+                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">家长/学生姓名</label>
+                        <input type="text" id="book-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">联系电话</label>
+                        <input type="tel" id="book-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">意向课程</label>
+                        <select id="book-course" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary appearance-none">
+                            <option value="K12全科">K12 全科功课辅导</option>
+                            <option value="成人英语">成人英语特训</option>
+                            <option value="论文指导">论文指导</option>
+                            <option value="其他咨询">其他咨询</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="book-submit-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交预约信息</span>
+                    </button>
+                </form>
+                
+                <!-- 成功提示区域 -->
+                <div id="booking-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">预约成功！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">感谢您的信任，我们的教务老师会尽快致电您。</p>
+                    <button onclick="closeBookingModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 温馨的欢迎回来 Toast 提示 -->
+    <div id="welcome-toast" class="glass-dark rounded-full py-3 px-6 shadow-2xl flex items-center gap-4">
+        <div class="w-10 h-10 bg-brand-accent/20 rounded-full flex items-center justify-center shrink-0">
+            <i data-lucide="sparkles" class="w-5 h-5 text-brand-accent"></i>
+        </div>
+        <div class="flex flex-col pr-2">
+            <span class="text-white font-bold text-sm tracking-wide">欢迎回来！</span>
+            <span id="welcome-toast-msg" class="text-white/70 text-xs mt-0.5">很高兴再次见到您</span>
+        </div>
+    </div>
+
+    <!-- 主页统一登录/注册弹窗 -->
+    <div id="auth-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <!-- 装饰背景 -->
+            <div class="absolute -top-20 -right-20 w-48 h-48 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="p-8 relative z-10">
+                <button onclick="closeAuthModal()" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+                
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-brand-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="user-circle" class="w-8 h-8 text-brand-primary"></i>
+                    </div>
+                    <h3 id="auth-title" class="text-2xl font-serif font-bold text-brand-primary mb-2">欢迎来到星途启航</h3>
+                    <p class="text-sm text-brand-primary/60">家教兼职与自习室统一通行证</p>
+                </div>
+
+                <!-- 登录注册 Tab -->
+                <div class="flex border-b border-brand-primary/10 mb-6">
+                    <button type="button" onclick="switchAuthTab('login')" id="auth-tab-login" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent">账号登录</button>
+                    <button type="button" onclick="switchAuthTab('register')" id="auth-tab-register" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent">免费注册</button>
+                </div>
+                
+                <form id="auth-form" onsubmit="submitAuth(event)" class="space-y-4">
+                    <!-- 通用：邮箱地址 -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">邮箱地址</label>
+                        <div class="flex gap-2">
+                            <div class="relative flex-grow">
+                                <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="email" id="auth-email" required placeholder="your@email.com" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            </div>
+                            <button type="button" id="auth-send-btn" onclick="sendAuthCode()" class="hidden px-4 py-3 bg-brand-primary/5 text-brand-primary text-sm font-medium rounded-xl hover:bg-brand-primary/10 transition-colors border-none cursor-pointer whitespace-nowrap">获取验证码</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 注册/找回密码特有：验证码 -->
+                    <div id="auth-code-group" class="space-y-1 hidden">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">验证码</label>
+                        <div class="relative">
+                            <i data-lucide="key" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="auth-code" placeholder="6位数字" maxlength="6" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary tracking-widest text-center text-lg transition-all">
+                        </div>
+                    </div>
+
+                    <!-- 通用：密码 -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">密码</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="password" id="auth-password" required placeholder="请输入密码" class="w-full pl-11 pr-12 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-icon-1')" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-primary/40 hover:text-brand-primary cursor-pointer border-none bg-transparent outline-none">
+                                <i data-lucide="eye" id="eye-icon-1" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 注册/找回密码特有：确认密码 -->
+                    <div id="auth-confirm-group" class="space-y-1 hidden">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">确认密码</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="password" id="auth-confirm-password" placeholder="再次输入密码" class="w-full pl-11 pr-12 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('auth-confirm-password', 'eye-icon-2')" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-primary/40 hover:text-brand-primary cursor-pointer border-none bg-transparent outline-none">
+                                <i data-lucide="eye" id="eye-icon-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 登录特有：忘记密码 -->
+                    <div id="auth-forgot-group" class="text-right">
+                        <button type="button" onclick="switchAuthTab('forgot')" class="text-xs text-brand-primary/60 hover:text-brand-accent transition-colors bg-transparent border-none cursor-pointer outline-none">忘记密码？</button>
+                    </div>
+
+                    <button type="submit" id="auth-submit-btn" class="w-full mt-6 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg shadow-brand-primary/20 border-none outline-none cursor-pointer flex justify-center items-center gap-2">
+                        <span id="auth-btn-text">确认登录</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <!-- 返回登录按钮 (仅在忘记密码时显示) -->
+                    <button type="button" id="auth-back-login" onclick="switchAuthTab('login')" class="hidden w-full py-3 bg-transparent text-brand-primary/60 text-sm hover:text-brand-primary font-medium rounded-xl transition-colors border-none outline-none cursor-pointer text-center">
+                        返回登录
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 错误/提示 弹窗 -->
+    <div id="alert-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAlertModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8 text-center">
+                <div id="alert-icon-container" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i id="alert-icon" data-lucide="info" class="w-8 h-8"></i>
+                </div>
+                <h3 id="alert-title" class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="alert-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
+                <button onclick="closeAlertModal()" id="alert-btn" class="w-full py-3 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认操作 弹窗 -->
+    <div id="confirm-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeConfirmModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                </div>
+                <h3 id="confirm-title" class="text-xl font-bold text-brand-primary mb-2">确认操作</h3>
+                <p id="confirm-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
+                <div class="flex gap-4">
+                    <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-gray-100 text-gray-600 font-medium rounded-xl hover:bg-gray-200 transition-colors border-none cursor-pointer">
+                        取消
+                    </button>
+                    <button id="confirm-btn" class="flex-1 py-3 bg-red-500 text-white font-medium rounded-xl btn-hover hover:bg-red-600 shadow-lg border-none cursor-pointer">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 专门用于显示发送成功的悬浮窗 Toast -->
+    <div id="send-success-toast" class="fixed top-[-100px] left-1/2 -translate-x-1/2 z-[9999] bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl shadow-2xl border border-green-500/20 flex items-center gap-3 transition-all duration-500 opacity-0 pointer-events-none">
+        <div class="w-8 h-8 rounded-full bg-green-100 text-green-500 flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-5 h-5"></i>
+        </div>
+        <div class="text-sm font-medium text-brand-primary">验证码已发送到您的邮箱，请注意查收。</div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 初始化 Lucide Icons
+        lucide.createIcons();
+        document.querySelectorAll('[data-current-year]').forEach((el) => {
+            el.textContent = new Date().getFullYear();
+        });
+
+        // Global Auth Logic
+        function getToken() { return localStorage.getItem('tutor_token'); }
+        function getEmail() { return localStorage.getItem('tutor_email'); }
+
+        function initAuthUI() {
+            const token = getToken();
+            const email = getEmail();
+            const authBtnMain = document.getElementById('auth-btn-main');
+            const userInfoMain = document.getElementById('user-info-main');
+            const authBtnMobile = document.getElementById('auth-btn-mobile');
+            const userInfoMobile = document.getElementById('user-info-mobile');
+            
+            if (token && email) {
+                userInfoMain.innerText = email;
+                userInfoMain.style.display = 'block';
+                authBtnMain.innerText = '退出登录';
+                authBtnMain.onclick = logout;
+                authBtnMain.classList.replace('bg-brand-primary', 'bg-transparent');
+                authBtnMain.classList.replace('text-brand-bg', 'text-brand-primary');
+                authBtnMain.classList.add('border', 'border-brand-primary/20');
+
+                userInfoMobile.innerText = email;
+                userInfoMobile.style.display = 'block';
+                authBtnMobile.innerText = '退出登录';
+                authBtnMobile.onclick = () => { toggleMobileMenu(); logout(); };
+            } else {
+                userInfoMain.style.display = 'none';
+                authBtnMain.innerText = '登录 / 注册';
+                authBtnMain.onclick = openAuthModal;
+                authBtnMain.classList.replace('bg-transparent', 'bg-brand-primary');
+                authBtnMain.classList.replace('text-brand-primary', 'text-brand-bg');
+                authBtnMain.classList.remove('border', 'border-brand-primary/20');
+
+                userInfoMobile.style.display = 'none';
+                authBtnMobile.innerText = '登录 / 注册';
+                authBtnMobile.onclick = () => { toggleMobileMenu(); openAuthModal(); };
+            }
+        }
+
+        function customConfirm(title, message, confirmCallback) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            
+            const confirmBtn = document.getElementById('confirm-btn');
+            // 移除旧的事件监听器
+            const newBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+            
+            newBtn.addEventListener('click', () => {
+                closeConfirmModal();
+                confirmCallback();
+            });
+            
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+            modal.querySelector('.modal-content').classList.remove('scale-95');
+            modal.querySelector('.modal-content').classList.add('scale-100');
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100');
+            modal.querySelector('.modal-content').classList.add('scale-95');
+            modal.querySelector('.modal-content').classList.remove('scale-100');
+        }
+
+        function logout() {
+            customConfirm('退出登录', '您确定要退出当前账号吗？', () => {
+                localStorage.removeItem('tutor_token');
+                localStorage.removeItem('tutor_email');
+                initAuthUI();
+            });
+        }
+
+        function openAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100');
+            // 关闭弹窗时清空表单并重置状态
+            setTimeout(() => {
+                document.getElementById('auth-form').reset();
+                const sendBtn = document.getElementById('auth-send-btn');
+                sendBtn.innerText = '获取验证码';
+                sendBtn.disabled = false;
+                // 重置倒计时定时器（如果有）
+                if (window.authTimer) {
+                    clearInterval(window.authTimer);
+                    window.authTimer = null;
+                }
+            }, 300);
+        }
+
+        let currentAuthMode = 'login';
+
+        function renderAuthSubmitButton(mode, isLoading = false) {
+            const btn = document.getElementById('auth-submit-btn');
+            if (!btn) return;
+
+            const defaultTextMap = { login: '确认登录', register: '免费注册', forgot: '重置密码' };
+            const loadingTextMap = { login: '登录中...', register: '注册中...', forgot: '重置中...' };
+            const text = isLoading ? loadingTextMap[mode] : defaultTextMap[mode];
+            const iconName = isLoading ? 'loader-2' : 'arrow-right';
+            const iconClass = isLoading ? 'w-4 h-4 animate-spin' : 'w-4 h-4';
+
+            btn.innerHTML = `<span id="auth-btn-text">${text}</span><i data-lucide="${iconName}" class="${iconClass}"></i>`;
+            lucide.createIcons();
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        function switchAuthTab(tab) {
+            currentAuthMode = tab;
+            const loginTab = document.getElementById('auth-tab-login');
+            const registerTab = document.getElementById('auth-tab-register');
+            const authTitle = document.getElementById('auth-title');
+            
+            const codeGroup = document.getElementById('auth-code-group');
+            const codeInput = document.getElementById('auth-code');
+            const sendBtn = document.getElementById('auth-send-btn');
+            const confirmGroup = document.getElementById('auth-confirm-group');
+            const confirmInput = document.getElementById('auth-confirm-password');
+            const forgotGroup = document.getElementById('auth-forgot-group');
+            const backLoginBtn = document.getElementById('auth-back-login');
+
+            // Reset forms & visuals
+            document.getElementById('auth-form').reset();
+            loginTab.parentElement.style.display = tab === 'forgot' ? 'none' : 'flex';
+
+            if (tab === 'login') {
+                loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
+                registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
+                authTitle.innerText = "欢迎回到星途启航";
+                
+                codeGroup.classList.add('hidden');
+                codeInput.required = false;
+                sendBtn.classList.add('hidden');
+                confirmGroup.classList.add('hidden');
+                confirmInput.required = false;
+                forgotGroup.classList.remove('hidden');
+                backLoginBtn.classList.add('hidden');
+            } else if (tab === 'register') {
+                registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
+                loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
+                authTitle.innerText = "注册星途启航通行证";
+                
+                codeGroup.classList.remove('hidden');
+                codeInput.required = true;
+                sendBtn.classList.remove('hidden');
+                confirmGroup.classList.remove('hidden');
+                confirmInput.required = true;
+                forgotGroup.classList.add('hidden');
+                backLoginBtn.classList.add('hidden');
+            } else if (tab === 'forgot') {
+                authTitle.innerText = "找回密码";
+                
+                codeGroup.classList.remove('hidden');
+                codeInput.required = true;
+                sendBtn.classList.remove('hidden');
+                confirmGroup.classList.remove('hidden');
+                confirmInput.required = true;
+                forgotGroup.classList.add('hidden');
+                backLoginBtn.classList.remove('hidden');
+            }
+
+            renderAuthSubmitButton(tab);
+        }
+
+        function showSendSuccessToast() {
+            const toast = document.getElementById('send-success-toast');
+            toast.style.top = '32px';
+            toast.style.opacity = '1';
+            
+            setTimeout(() => {
+                toast.style.top = '-100px';
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+
+        async function sendAuthCode() {
+            const email = document.getElementById('auth-email').value;
+            if (!email) return customAlert('提示', '请填写邮箱', 'error');
+            
+            const btn = document.getElementById('auth-send-btn');
+            btn.disabled = true;
+            btn.innerText = '发送中...';
+            
+            try {
+                const res = await fetch('/api/tutor/send-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                
+                if (res.ok && data.success) {
+                    if (data.debugCode) {
+                        customAlert('测试环境提示', `您的验证码是: <strong class="text-xl text-brand-accent tracking-widest">${data.debugCode}</strong>\n(线上环境配好邮件后不会弹出此提示)`, 'info');
+                    } else {
+                        // 使用新的悬浮窗代替 customAlert
+                        showSendSuccessToast();
+                    }
+
+                    let sec = 60;
+                    window.authTimer = setInterval(() => {
+                        sec--;
+                        btn.innerText = `${sec}s 后重发`;
+                        if (sec <= 0) {
+                            clearInterval(window.authTimer);
+                            window.authTimer = null;
+                            btn.innerText = '获取验证码';
+                            btn.disabled = false;
+                        }
+                    }, 1000);
+                } else {
+                    customAlert('发送失败', data.error || '无法发送验证码', 'error');
+                    btn.innerText = '获取验证码';
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+                btn.innerText = '获取验证码';
+                btn.disabled = false;
+            }
+        }
+
+        // 专门的欢迎 Toast 函数
+        function showWelcomeToast(email) {
+            const toast = document.getElementById('welcome-toast');
+            const msg = document.getElementById('welcome-toast-msg');
+            msg.innerText = email ? `很高兴再次见到您，${email}` : '很高兴再次见到您';
+            
+            // 播放入场动画
+            toast.classList.add('show');
+            
+            // 3.5秒后自动收起
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        async function submitAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const btn = document.getElementById('auth-submit-btn');
+            
+            // 表单校验
+            if (currentAuthMode !== 'login') {
+                const confirmPassword = document.getElementById('auth-confirm-password').value;
+                if (password !== confirmPassword) {
+                    return customAlert('提示', '两次输入的密码不一致', 'error');
+                }
+                if (password.length < 6) {
+                    return customAlert('提示', '密码长度不能少于6位', 'error');
+                }
+            }
+
+            const code = document.getElementById('auth-code').value;
+            
+            renderAuthSubmitButton(currentAuthMode, true);
+            
+            try {
+                let url = '/api/tutor/login'; // default login
+                if (currentAuthMode === 'register') url = '/api/tutor/register';
+                if (currentAuthMode === 'forgot') url = '/api/tutor/reset-password';
+
+                const payload = { email, password };
+                if (currentAuthMode !== 'login') payload.code = code;
+
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    if (currentAuthMode === 'forgot') {
+                        const resetEmail = email;
+                        switchAuthTab('login');
+                        document.getElementById('auth-email').value = resetEmail;
+                        customAlert('重置成功', '密码已重置，请直接使用新密码登录。', 'success');
+                    } else {
+                        localStorage.setItem('tutor_token', data.token);
+                        localStorage.setItem('tutor_email', data.email);
+                        closeAuthModal();
+                        initAuthUI();
+                        
+                        if (currentAuthMode === 'login') {
+                            showWelcomeToast(data.email);
+                        } else {
+                            customAlert('注册成功', `欢迎来到星途启航，${data.email}`, 'success');
+                        }
+                    }
+                } else {
+                    customAlert('操作失败', data.error || '验证码或密码不正确', 'error');
+                }
+            } catch (e) {
+                console.error('认证流程异常:', e);
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } finally {
+                renderAuthSubmitButton(currentAuthMode);
+            }
+        }
+
+        // 初始化拦截锚点，如果带着 #login 则打开登录框
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuthUI();
+            if (window.location.hash === '#login') {
+                openAuthModal();
+                // 可选：清除 hash
+                history.replaceState(null, null, ' ');
+            }
+
+            const desktopServicesMenu = document.querySelector('.service-menu-group');
+            const desktopServicesTrigger = document.getElementById('desktop-services-trigger');
+            const desktopServicesIcon = document.getElementById('desktop-services-icon');
+            if (desktopServicesMenu && desktopServicesTrigger) {
+                desktopServicesTrigger.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    desktopServicesMenu.classList.toggle('is-open');
+                    desktopServicesIcon.classList.toggle('rotate-180');
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!desktopServicesMenu.contains(event.target)) {
+                        desktopServicesMenu.classList.remove('is-open');
+                        desktopServicesIcon.classList.remove('rotate-180');
+                    }
+                });
+
+                desktopServicesMenu.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', () => {
+                        desktopServicesMenu.classList.remove('is-open');
+                        desktopServicesIcon.classList.remove('rotate-180');
+                    });
+                });
+            }
+        });
+
+        // 导航栏滚动效果 (玻璃拟态增强)
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-sm');
+                navbar.style.background = 'rgba(255, 255, 255, 0.7)';
+                navbar.style.backdropFilter = 'blur(15px)';
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.style.background = 'rgba(255, 255, 255, 0.3)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            }
+        });
+
+        // 导航栏点击平滑滚动 (新增体验优化)
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // 考虑固定导航栏的高度偏移 (约 80px)
+                    const headerOffset = 80;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+
+        // 移动端菜单切换逻辑
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+        const mobileServicesSubmenu = document.getElementById('mobile-services-submenu');
+        const mobileServicesIcon = document.getElementById('mobile-services-icon');
+        let isMobileMenuOpen = false;
+        let isMobileServicesMenuOpen = false;
+
+        function toggleMobileMenu() {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenu.classList.add('translate-x-0');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            } else {
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+                closeMobileServicesMenu();
+            }
+        }
+
+        function toggleMobileServicesMenu() {
+            isMobileServicesMenuOpen = !isMobileServicesMenuOpen;
+            if (isMobileServicesMenuOpen) {
+                mobileServicesSubmenu.classList.remove('hidden');
+                mobileServicesIcon.classList.add('rotate-180');
+            } else {
+                closeMobileServicesMenu();
+            }
+        }
+
+        function closeMobileServicesMenu() {
+            isMobileServicesMenuOpen = false;
+            mobileServicesSubmenu.classList.add('hidden');
+            mobileServicesIcon.classList.remove('rotate-180');
+        }
+
+        // 滚动入场动画 (Intersection Observer)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // 动画只执行一次
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+        
+        // 预约弹窗逻辑 (V2 新增)
+        const bookingModal = document.getElementById('booking-modal');
+        const courseSelect = document.getElementById('book-course');
+        
+        function openBookingModal(defaultCourse) {
+            if (defaultCourse) {
+                courseSelect.value = defaultCourse;
+            }
+            bookingModal.classList.remove('pointer-events-none');
+            bookingModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+        
+        function closeBookingModal() {
+            bookingModal.classList.add('pointer-events-none');
+            bookingModal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // 重置表单状态
+            setTimeout(() => {
+                document.getElementById('booking-form').reset();
+                document.getElementById('booking-form').style.display = 'block';
+                document.getElementById('booking-success').style.display = 'none';
+                document.getElementById('booking-success').classList.remove('flex');
+            }, 300);
+        }
+
+        // 自定义弹窗 API
+        function customAlert(title, message, type = 'info') {
+            const modal = document.getElementById('alert-modal');
+            const iconContainer = document.getElementById('alert-icon-container');
+            const icon = document.getElementById('alert-icon');
+            const btn = document.getElementById('alert-btn');
+            
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerHTML = message.replace(/\n/g, '<br>');
+            
+            if (type === 'error') {
+                iconContainer.className = 'w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'x-circle');
+                btn.className = 'w-full py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else if (type === 'success') {
+                iconContainer.className = 'w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'check-circle');
+                btn.className = 'w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else {
+                iconContainer.className = 'w-16 h-16 bg-brand-primary/5 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'info');
+                btn.className = 'w-full py-3 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            }
+            
+            lucide.createIcons();
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.remove('scale-95');
+            modal.querySelector('.modal-content').classList.add('scale-100');
+        }
+        
+        function closeAlertModal() {
+            const modal = document.getElementById('alert-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.add('scale-95');
+            modal.querySelector('.modal-content').classList.remove('scale-100');
+        }
+        
+        // 为了兼容旧的预约失败调用，保留别名
+        function showErrorModal(message) {
+            customAlert('提示', message, 'error');
+        }
+        
+        // 提交预约表单
+        async function submitBooking(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('book-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">提交中...</span>';
+            lucide.createIcons();
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            
+            const payload = {
+                name: document.getElementById('book-name').value,
+                phone: document.getElementById('book-phone').value,
+                course: document.getElementById('book-course').value,
+            };
+            
+            try {
+                const response = await fetch('/api/appointment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('booking-form').style.display = 'none';
+                    const successDiv = document.getElementById('booking-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
+                } else {
+                    let errorMsg = '提交失败，请稍后再试或直接电话联系我们。';
+                    try {
+                        const result = await response.json();
+                        if (result.error) errorMsg = result.error;
+                    } catch(e) {}
+                    showErrorModal(errorMsg);
+                }
+            } catch (error) {
+                console.error('Error submitting booking:', error);
+                showErrorModal('网络错误，请检查您的连接。');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+    </script>
+</body>
+</html>
