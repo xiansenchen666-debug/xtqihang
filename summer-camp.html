@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英国国际夏令营 | 星途启航教育</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7', // 米白色底色
+                            primary: '#1A2B3C', // 深藏青
+                            accent: '#C5A059', // 柔和金色
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1A2B3C;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* 玻璃拟态 (Glassmorphism) */
+        .glass {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+
+        .glass-dark {
+            background: rgba(26, 43, 60, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* 细腻微动效 */
+        .btn-hover {
+            transition: all 0.4s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4);
+            background-color: #b59048; /* Slightly darker gold */
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(26, 43, 60, 0.05);
+            box-shadow: none;
+        }
+
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1);
+        }
+
+        /* 滚动入场动画类 */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, visibility;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #1A2B3C 0%, #C5A059 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 标签页样式 */
+        .schedule-tab {
+            transition: all 0.3s ease;
+        }
+        .schedule-tab.active {
+            background-color: #1A2B3C;
+            color: #FDFBF7;
+            border-color: #1A2B3C;
+        }
+        .schedule-pane {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .schedule-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- Simple Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass py-4 px-6 md:px-12 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="relative inline-block font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                <span class="absolute -top-2.5 -left-1 text-[10px] text-brand-accent leading-none">星途</span>
+                <span class="text-2xl">启航教育</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <a href="#booking" class="inline-flex items-center justify-center px-6 py-2.5 bg-brand-accent text-white text-sm font-medium rounded-full btn-hover border-none outline-none decoration-transparent">
+                    立即报名
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center pt-24 pb-12 px-6 md:px-12 overflow-hidden bg-brand-primary text-brand-bg">
+        <!-- 背景图与遮罩 -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Summer Camp Background" class="w-full h-full object-cover opacity-30">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-primary via-brand-primary/80 to-transparent"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto w-full relative z-10 fade-in-section text-center">
+            <div class="inline-flex mb-6 px-4 py-1.5 rounded-full border border-brand-accent/50 text-brand-accent text-xs font-semibold tracking-widest uppercase bg-brand-primary/30 backdrop-blur-md">
+                2024 Summer Camp
+            </div>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-serif font-bold leading-tight mb-6">
+                把英国国际夏令营<br>
+                <span class="text-brand-accent italic">"搬"到深圳</span>
+            </h1>
+            <p class="text-lg md:text-xl text-brand-bg/80 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                无需远行 · 尽享纯海外夏令营 · 全封闭CLEAR教学体系 · 纯外籍陪护 · 24小时全英环境
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-3 md:gap-6 mb-12">
+                <span class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm font-medium border border-white/20 flex items-center gap-2">
+                    <i data-lucide="leaf" class="w-4 h-4 text-brand-accent"></i> 自然探索
+                </span>
+                <span class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm font-medium border border-white/20 flex items-center gap-2">
+                    <i data-lucide="palette" class="w-4 h-4 text-brand-accent"></i> 艺术科创
+                </span>
+                <span class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm font-medium border border-white/20 flex items-center gap-2">
+                    <i data-lucide="users" class="w-4 h-4 text-brand-accent"></i> 团队协作
+                </span>
+                <span class="px-4 py-2 bg-brand-accent/20 backdrop-blur-md rounded-full text-sm font-bold text-brand-accent border border-brand-accent/30 flex items-center gap-2">
+                    <i data-lucide="user-check" class="w-4 h-4"></i> 8人小团
+                </span>
+                <span class="px-4 py-2 bg-brand-accent/20 backdrop-blur-md rounded-full text-sm font-bold text-brand-accent border border-brand-accent/30 flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4"></i> 7天6晚
+                </span>
+            </div>
+
+            <a href="#clear-system" class="inline-flex items-center justify-center w-14 h-14 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-colors animate-bounce text-white">
+                <i data-lucide="arrow-down" class="w-6 h-6"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- CLEAR Curriculum System -->
+    <section id="clear-system" class="py-24 px-6 md:px-12 relative">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl -z-10"></div>
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 fade-in-section">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-4">
+                    C.L.E.A.R. <span class="italic text-brand-accent">课程体系</span>
+                </h2>
+                <p class="text-[11px] font-bold tracking-[0.3em] uppercase text-brand-primary/40">Curriculum System</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <!-- C -->
+                <div class="glass rounded-3xl p-8 card-hover fade-in-section flex flex-col h-full border-t-4 border-t-brand-accent">
+                    <div class="text-6xl font-serif font-bold text-brand-primary/10 mb-2">C</div>
+                    <h3 class="text-xl font-bold text-brand-primary mb-1">Communication</h3>
+                    <p class="text-sm font-bold text-brand-accent mb-4">交流</p>
+                    <p class="text-sm text-brand-primary/70 leading-relaxed mt-auto">
+                        每日主题沟通课(社交/演说/跨文化对话) + 小组辩论。打破沟通障碍，建立自信表达。
+                    </p>
+                </div>
+                <!-- L -->
+                <div class="glass rounded-3xl p-8 card-hover fade-in-section flex flex-col h-full border-t-4 border-t-brand-primary" style="transition-delay: 0.1s;">
+                    <div class="text-6xl font-serif font-bold text-brand-primary/10 mb-2">L</div>
+                    <h3 class="text-xl font-bold text-brand-primary mb-1">Language</h3>
+                    <p class="text-sm font-bold text-brand-accent mb-4">语言</p>
+                    <p class="text-sm text-brand-primary/70 leading-relaxed mt-auto">
+                        情景化 ESL 课程。在户外探索、运动竞技与艺术创作等真实场景中自然习得语言。
+                    </p>
+                </div>
+                <!-- E -->
+                <div class="glass rounded-3xl p-8 card-hover fade-in-section flex flex-col h-full border-t-4 border-t-emerald-500" style="transition-delay: 0.2s;">
+                    <div class="text-6xl font-serif font-bold text-brand-primary/10 mb-2">E</div>
+                    <h3 class="text-xl font-bold text-brand-primary mb-1">Exploration</h3>
+                    <p class="text-sm font-bold text-brand-accent mb-4">探索</p>
+                    <p class="text-sm text-brand-primary/70 leading-relaxed mt-auto">
+                        梧桐山生态探秘 + 自然科学实验 + 跨文化体验。激发好奇心，探索广阔世界。
+                    </p>
+                </div>
+                <!-- A -->
+                <div class="glass rounded-3xl p-8 card-hover fade-in-section flex flex-col h-full border-t-4 border-t-orange-400" style="transition-delay: 0.3s;">
+                    <div class="text-6xl font-serif font-bold text-brand-primary/10 mb-2">A</div>
+                    <h3 class="text-xl font-bold text-brand-primary mb-1">Activity</h3>
+                    <p class="text-sm font-bold text-brand-accent mb-4">实践</p>
+                    <p class="text-sm text-brand-primary/70 leading-relaxed mt-auto">
+                        每日 18+ 项自由选修课(运动/艺术/科创/手工)。在动手实践中释放天性与创造力。
+                    </p>
+                </div>
+                <!-- R -->
+                <div class="glass rounded-3xl p-8 card-hover fade-in-section flex flex-col h-full border-t-4 border-t-blue-500" style="transition-delay: 0.4s;">
+                    <div class="text-6xl font-serif font-bold text-brand-primary/10 mb-2">R</div>
+                    <h3 class="text-xl font-bold text-brand-primary mb-1">Review</h3>
+                    <p class="text-sm font-bold text-brand-accent mb-4">复盘</p>
+                    <p class="text-sm text-brand-primary/70 leading-relaxed mt-auto">
+                        每日晚间评估 + 结营成长报告。沉淀所学所感，让每一次进步都有迹可循。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7-Day Schedule -->
+    <section class="py-24 px-6 md:px-12 bg-white relative">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16 fade-in-section">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-4">
+                    7天全英沉浸<span class="italic text-brand-accent">国际化氛围</span>
+                </h2>
+                <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-primary/40">7-Day Immersive International Experience</p>
+            </div>
+
+            <!-- Schedule Tabs -->
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12 fade-in-section">
+                <button class="schedule-tab active px-6 py-2 rounded-full border border-brand-primary/20 text-sm font-bold" onclick="showSchedule('d1')">Day 1</button>
+                <button class="schedule-tab px-6 py-2 rounded-full border border-brand-primary/20 text-sm font-bold text-brand-primary/60" onclick="showSchedule('d2')">Day 2</button>
+                <button class="schedule-tab px-6 py-2 rounded-full border border-brand-primary/20 text-sm font-bold text-brand-primary/60" onclick="showSchedule('d3')">Day 3</button>
+                <button class="schedule-tab px-6 py-2 rounded-full border border-brand-primary/20 text-sm font-bold text-brand-primary/60" onclick="showSchedule('d4')">Day 4</button>
+                <button class="schedule-tab px-6 py-2 rounded-full border border-brand-primary/20 text-sm font-bold text-brand-primary/60" onclick="showSchedule('d5')">Day 5</button>
+                <button class="schedule-tab px-6 py-2 rounded-full border border-brand-primary/20 text-sm font-bold text-brand-primary/60" onclick="showSchedule('d6')">Day 6</button>
+                <button class="schedule-tab px-6 py-2 rounded-full border border-brand-primary/20 text-sm font-bold text-brand-primary/60" onclick="showSchedule('d7')">Day 7</button>
+            </div>
+
+            <!-- Schedule Content -->
+            <div class="glass rounded-[2rem] p-8 md:p-12 shadow-xl border border-brand-primary/5 fade-in-section relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl -z-10"></div>
+                
+                <!-- D1 -->
+                <div id="d1" class="schedule-pane active">
+                    <div class="flex items-center gap-4 mb-8 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-primary text-brand-bg rounded-xl flex items-center justify-center font-serif font-bold text-xl">D1</div>
+                        <h3 class="text-2xl font-bold text-brand-primary">集结启航 / Orientation</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-accent flex items-center gap-2"><i data-lucide="sun" class="w-5 h-5"></i> 上午 AM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">入营注册、发放营地护照</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-orange-500 flex items-center gap-2"><i data-lucide="sunset" class="w-5 h-5"></i> 下午 PM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">英语开营仪式、分级1对1测试、组建团队规则</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-primary flex items-center gap-2"><i data-lucide="moon" class="w-5 h-5"></i> 晚上 EVE</div>
+                            <div class="md:w-3/4 text-brand-primary/80">团队欢迎会、制定全英宿舍安全培训、睡前英文分享</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D2 -->
+                <div id="d2" class="schedule-pane">
+                    <div class="flex items-center gap-4 mb-8 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-primary text-brand-bg rounded-xl flex items-center justify-center font-serif font-bold text-xl">D2</div>
+                        <h3 class="text-2xl font-bold text-brand-primary">自然科学 / Nature & Science</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-accent flex items-center gap-2"><i data-lucide="sun" class="w-5 h-5"></i> 上午 AM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">自然科学主题情景课、徒步准备与观察计划</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-orange-500 flex items-center gap-2"><i data-lucide="sunset" class="w-5 h-5"></i> 下午 PM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">户外生态探秘、自然科学土壤实验(动手记录)</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-primary flex items-center gap-2"><i data-lucide="moon" class="w-5 h-5"></i> 晚上 EVE</div>
+                            <div class="md:w-3/4 text-brand-primary/80">语言复盘课、英文电影夜，外教引导分享</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D3 -->
+                <div id="d3" class="schedule-pane">
+                    <div class="flex items-center gap-4 mb-8 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-primary text-brand-bg rounded-xl flex items-center justify-center font-serif font-bold text-xl">D3</div>
+                        <h3 class="text-2xl font-bold text-brand-primary">运动与手工 / Sports & Crafts</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-accent flex items-center gap-2"><i data-lucide="sun" class="w-5 h-5"></i> 上午 AM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">国际运动：橄榄球/飞盘/攀岩等，全英指令沟通</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-orange-500 flex items-center gap-2"><i data-lucide="sunset" class="w-5 h-5"></i> 下午 PM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">DIY雨伞、牛皮纸扮演、学习手工词汇</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-primary flex items-center gap-2"><i data-lucide="moon" class="w-5 h-5"></i> 晚上 EVE</div>
+                            <div class="md:w-3/4 text-brand-primary/80">BBQ大餐、户外桌游夜，全程英文互动</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D4 -->
+                <div id="d4" class="schedule-pane">
+                    <div class="flex items-center gap-4 mb-8 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-primary text-brand-bg rounded-xl flex items-center justify-center font-serif font-bold text-xl">D4</div>
+                        <h3 class="text-2xl font-bold text-brand-primary">艺术与科创 / Arts & Innovation</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-accent flex items-center gap-2"><i data-lucide="sun" class="w-5 h-5"></i> 上午 AM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">艺术课：扎染/油画，讲解创作技巧与西方艺术</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-orange-500 flex items-center gap-2"><i data-lucide="sunset" class="w-5 h-5"></i> 下午 PM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">科创：户外生态装置搭建、英文讨论设计方案</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-primary flex items-center gap-2"><i data-lucide="moon" class="w-5 h-5"></i> 晚上 EVE</div>
+                            <div class="md:w-3/4 text-brand-primary/80">艺术成果展、英文才艺秀彩排，鼓励自信表达</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D5 -->
+                <div id="d5" class="schedule-pane">
+                    <div class="flex items-center gap-4 mb-8 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-primary text-brand-bg rounded-xl flex items-center justify-center font-serif font-bold text-xl">D5</div>
+                        <h3 class="text-2xl font-bold text-brand-primary">国际视野 / Global Perspective</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-accent flex items-center gap-2"><i data-lucide="sun" class="w-5 h-5"></i> 上午 AM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">国际美食工坊：英式松饼/意式披萨制作，了解饮食文化</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-orange-500 flex items-center gap-2"><i data-lucide="sunset" class="w-5 h-5"></i> 下午 PM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">模拟联合国(环境主题)：英文陈述与辩论</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-primary flex items-center gap-2"><i data-lucide="moon" class="w-5 h-5"></i> 晚上 EVE</div>
+                            <div class="md:w-3/4 text-brand-primary/80">国际文化之夜：各国习俗分享与多元文化交流</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D6 -->
+                <div id="d6" class="schedule-pane">
+                    <div class="flex items-center gap-4 mb-8 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-primary text-brand-bg rounded-xl flex items-center justify-center font-serif font-bold text-xl">D6</div>
+                        <h3 class="text-2xl font-bold text-brand-primary">在地文化与星空 / Local Culture & Stars</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-accent flex items-center gap-2"><i data-lucide="sun" class="w-5 h-5"></i> 上午 AM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">甘坑古镇，观察客家围屋建筑特点，完成英文观察清单</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-orange-500 flex items-center gap-2"><i data-lucide="sunset" class="w-5 h-5"></i> 下午 PM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">体验制作客家凉帽，学员准备英文解说词，向外教介绍客家历史</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-primary flex items-center gap-2"><i data-lucide="moon" class="w-5 h-5"></i> 晚上 EVE</div>
+                            <div class="md:w-3/4 text-brand-primary/80">星空日记，躺在草坪上辨认星座，在日记本上用英文写下</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D7 -->
+                <div id="d7" class="schedule-pane">
+                    <div class="flex items-center gap-4 mb-8 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-primary text-brand-bg rounded-xl flex items-center justify-center font-serif font-bold text-xl">D7</div>
+                        <h3 class="text-2xl font-bold text-brand-primary">结营与收获 / Farewell</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-brand-accent flex items-center gap-2"><i data-lucide="sun" class="w-5 h-5"></i> 上午 AM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">闭营典礼、颁发国际认证证书、外教全英主持</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-8">
+                            <div class="md:w-1/4 font-bold text-orange-500 flex items-center gap-2"><i data-lucide="sunset" class="w-5 h-5"></i> 下午 PM</div>
+                            <div class="md:w-3/4 text-brand-primary/80">学员全英展示学习成果、向家长汇报收获</div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlights / Features -->
+    <section class="py-24 px-6 md:px-12 bg-[#FDFBF7]">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="fade-in-section">
+                    <h2 class="text-4xl font-serif font-bold text-brand-primary mb-8">
+                        为什么选择<br>我们的夏令营？
+                    </h2>
+                    
+                    <div class="space-y-8">
+                        <!-- Feature 1 -->
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-brand-accent/10 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-6 h-6 text-brand-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-primary mb-2">国际教育体系</h4>
+                                <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                    全封闭 CLEAR 教学体系 (交流、语言、探索、实践、复盘)。包含每日晚间评估与结营成长报告。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Feature 2 -->
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
+                                <i data-lucide="users" class="w-6 h-6 text-brand-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-primary mb-2">外教师资保障</h4>
+                                <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                    100% 英语母语外教，1:5 超高师生配比。全寄宿式星空营地，纯外籍陪护，24小时全英环境。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
+                                <i data-lucide="settings" class="w-6 h-6 text-emerald-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-primary mb-2">定制化教学</h4>
+                                <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                    按英语水平进行科学分班，适配不同基础的孩子，真正做到因材施教。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 4 -->
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                                <i data-lucide="star" class="w-6 h-6 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-primary mb-2">丰富才艺实践</h4>
+                                <ul class="text-sm text-brand-primary/70 leading-relaxed space-y-1">
+                                    <li><strong class="text-brand-primary">运动：</strong>徒步、橄榄球、飞盘、攀岩等</li>
+                                    <li><strong class="text-brand-primary">才艺：</strong>雨伞DIY、扎染、油画、烹饪</li>
+                                    <li><strong class="text-brand-primary">娱乐：</strong>英文电影夜、户外桌游夜、BBQ、户外帐篷搭建等</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image Grid -->
+                <div class="grid grid-cols-2 gap-4 fade-in-section">
+                    <img src="https://images.unsplash.com/photo-1533615715560-618826500854?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Camp Activity" class="w-full h-48 md:h-64 object-cover rounded-2xl shadow-lg mt-8">
+                    <img src="https://images.unsplash.com/photo-1544477434-601934c56877?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Nature Exploration" class="w-full h-48 md:h-64 object-cover rounded-2xl shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Group Teamwork" class="w-full h-48 md:h-64 object-cover rounded-2xl shadow-lg col-span-2">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section id="booking" class="py-24 px-6 md:px-12 bg-brand-primary text-center relative overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-10">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=')] bg-[length:30px_30px]"></div>
+        </div>
+        <div class="max-w-3xl mx-auto relative z-10 fade-in-section">
+            <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
+                预留您的专属席位
+            </h2>
+            <p class="text-white/80 mb-10 text-lg">
+                8人小团，名额有限。让孩子在纯正的英文环境与大自然中度过一个难忘的夏天。
+            </p>
+            <div class="glass-dark p-8 rounded-3xl max-w-md mx-auto text-left">
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-white/80 uppercase tracking-wider mb-1">家长姓名</label>
+                        <input type="text" class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-white placeholder-white/30" placeholder="请输入姓名">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-white/80 uppercase tracking-wider mb-1">联系电话</label>
+                        <input type="tel" class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-white placeholder-white/30" placeholder="请输入手机号">
+                    </div>
+                    <button type="button" onclick="alert('预约信息已提交，我们的教务老师将尽快与您联系！')" class="w-full mt-4 py-4 bg-brand-accent text-white font-bold rounded-xl btn-hover shadow-lg border-none outline-none cursor-pointer">
+                        立即提交报名
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">
+            &copy; 2024 星途启航教育 Xingtu Qihang Education. All rights reserved.
+        </p>
+    </footer>
+
+    <script>
+        // Icons
+        lucide.createIcons();
+
+        // Scroll Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach((section) => {
+            observer.observe(section);
+        });
+
+        // Schedule Tabs Logic
+        function showSchedule(dayId) {
+            // Remove active from all tabs
+            document.querySelectorAll('.schedule-tab').forEach(tab => {
+                tab.classList.remove('active', 'text-brand-primary');
+                tab.classList.add('text-brand-primary/60');
+            });
+            // Add active to clicked tab
+            const activeTab = document.querySelector(`button[onclick="showSchedule('${dayId}')"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.classList.remove('text-brand-primary/60');
+            }
+
+            // Hide all panes
+            document.querySelectorAll('.schedule-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            // Show selected pane
+            document.getElementById(dayId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
